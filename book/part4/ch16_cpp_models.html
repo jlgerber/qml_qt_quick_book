@@ -1,0 +1,567 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>C++ Models and Data Pipelines - Developing Qt Quick / QML Applications with Python and C++</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practitioner&#x27;s guide for experienced developers">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "navy";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-ba02cd6a.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e492303a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Developing Qt Quick / QML Applications with Python and C++</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-16-c-models-and-data-pipelines"><a class="header" href="#chapter-16-c-models-and-data-pipelines">Chapter 16: C++ Models and Data Pipelines</a></h1>
+<h2 id="high-performance-qabstractitemmodel-implementations"><a class="header" href="#high-performance-qabstractitemmodel-implementations">High-Performance <code>QAbstractItemModel</code> Implementations</a></h2>
+<p>The C++ implementation of <code>QAbstractItemModel</code> gives full control over data layout, change notification granularity, and memory management — enabling models that outperform Python equivalents by an order of magnitude for large datasets.</p>
+<h3 id="template-pattern-for-list-models"><a class="header" href="#template-pattern-for-list-models">Template Pattern for List Models</a></h3>
+<p>Most application list models share the same structural boilerplate. A base template reduces repetition:</p>
+<pre><code class="language-cpp">// listmodelbase.h
+#pragma once
+#include &lt;QAbstractListModel&gt;
+#include &lt;vector&gt;
+
+template&lt;typename T&gt;
+class ListModelBase : public QAbstractListModel
+{
+public:
+    explicit ListModelBase(QObject *parent = nullptr)
+        : QAbstractListModel(parent) {}
+
+    int rowCount(const QModelIndex &amp;parent = QModelIndex()) const override {
+        return parent.isValid() ? 0 : static_cast&lt;int&gt;(m_items.size());
+    }
+
+    void setItems(std::vector&lt;T&gt; items) {
+        beginResetModel();
+        m_items = std::move(items);
+        endResetModel();
+    }
+
+    void appendItem(T item) {
+        const int row = static_cast&lt;int&gt;(m_items.size());
+        beginInsertRows(QModelIndex(), row, row);
+        m_items.push_back(std::move(item));
+        endInsertRows();
+    }
+
+    void removeItem(int row) {
+        if (row &lt; 0 || row &gt;= static_cast&lt;int&gt;(m_items.size()))
+            return;
+        beginRemoveRows(QModelIndex(), row, row);
+        m_items.erase(m_items.begin() + row);
+        endRemoveRows();
+    }
+
+    void updateItem(int row, T item) {
+        if (row &lt; 0 || row &gt;= static_cast&lt;int&gt;(m_items.size()))
+            return;
+        m_items[row] = std::move(item);
+        const QModelIndex idx = index(row);
+        emit dataChanged(idx, idx);
+    }
+
+protected:
+    std::vector&lt;T&gt; m_items;
+};
+</code></pre>
+<p>Concrete model inherits and adds roles:</p>
+<pre><code class="language-cpp">// contactmodel.h
+struct Contact {
+    QString name;
+    QString email;
+    QUrl avatarUrl;
+};
+
+class ContactModel : public ListModelBase&lt;Contact&gt;
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    enum Roles {
+        NameRole = Qt.UserRole + 1,
+        EmailRole,
+        AvatarUrlRole
+    };
+    Q_ENUM(Roles)
+
+    explicit ContactModel(QObject *parent = nullptr);
+
+    QVariant data(const QModelIndex &amp;index, int role) const override;
+    QHash&lt;int, QByteArray&gt; roleNames() const override;
+};
+</code></pre>
+<pre><code class="language-cpp">// contactmodel.cpp
+QHash&lt;int, QByteArray&gt; ContactModel::roleNames() const {
+    return {
+        {NameRole,     "name"},
+        {EmailRole,    "email"},
+        {AvatarUrlRole, "avatar"},
+    };
+}
+
+QVariant ContactModel::data(const QModelIndex &amp;index, int role) const {
+    if (!index.isValid() || index.row() &gt;= static_cast&lt;int&gt;(m_items.size()))
+        return {};
+
+    const Contact &amp;c = m_items[index.row()];
+    switch (role) {
+    case NameRole:     return c.name;
+    case EmailRole:    return c.email;
+    case AvatarUrlRole: return c.avatarUrl;
+    case Qt::DisplayRole: return c.name;
+    default: return {};
+    }
+}
+</code></pre>
+<h3 id="minimizing-datachanged-overhead"><a class="header" href="#minimizing-datachanged-overhead">Minimizing <code>dataChanged</code> Overhead</a></h3>
+<p><code>dataChanged(topLeft, bottomRight, roles)</code> takes a roles list as the third argument. When roles is empty, the view assumes all roles changed and re-queries all of them. Specify roles precisely:</p>
+<pre><code class="language-cpp">void ContactModel::updateEmail(int row, const QString &amp;email) {
+    if (row &lt; 0 || row &gt;= static_cast&lt;int&gt;(m_items.size()))
+        return;
+    if (m_items[row].email == email)
+        return;
+    m_items[row].email = email;
+    const QModelIndex idx = index(row);
+    emit dataChanged(idx, idx, {EmailRole});  // only EmailRole changed
+}
+</code></pre>
+<p>For bulk updates (e.g., updating a status field on all items), batch the change:</p>
+<pre><code class="language-cpp">void ContactModel::markAllAsRead() {
+    if (m_items.empty()) return;
+    for (auto &amp;c : m_items)
+        c.unread = false;
+    emit dataChanged(index(0), index(rowCount() - 1), {UnreadRole});
+}
+</code></pre>
+<hr>
+<h2 id="role-based-data-qsortfilterproxymodel-and-custom-proxy-chains"><a class="header" href="#role-based-data-qsortfilterproxymodel-and-custom-proxy-chains">Role-Based Data, <code>QSortFilterProxyModel</code>, and Custom Proxy Chains</a></h2>
+<h3 id="qsortfilterproxymodel"><a class="header" href="#qsortfilterproxymodel"><code>QSortFilterProxyModel</code></a></h3>
+<p><code>QSortFilterProxyModel</code> wraps any <code>QAbstractItemModel</code> and provides sorting and filtering without copying data. The view uses the proxy; the proxy delegates to the source model.</p>
+<pre><code class="language-cpp">// Setup in C++
+auto *source = new ContactModel(this);
+auto *proxy = new QSortFilterProxyModel(this);
+proxy-&gt;setSourceModel(source);
+proxy-&gt;setSortRole(ContactModel::NameRole);
+proxy-&gt;setFilterRole(ContactModel::NameRole);
+proxy-&gt;setFilterCaseSensitivity(Qt::CaseInsensitive);
+proxy-&gt;sort(0, Qt::AscendingOrder);
+</code></pre>
+<pre><code class="language-qml">// In QML
+TextField {
+    onTextChanged: contactProxy.setFilterFixedString(text)
+}
+
+ListView {
+    model: contactProxy   // the proxy, not the source
+}
+</code></pre>
+<h3 id="custom-qsortfilterproxymodel"><a class="header" href="#custom-qsortfilterproxymodel">Custom <code>QSortFilterProxyModel</code></a></h3>
+<p>For multi-field filtering, subclass and override <code>filterAcceptsRow</code>:</p>
+<pre><code class="language-cpp">class ContactFilterProxy : public QSortFilterProxyModel
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    Q_PROPERTY(QString nameFilter READ nameFilter
+               WRITE setNameFilter NOTIFY nameFilterChanged)
+    Q_PROPERTY(bool showFavoritesOnly READ showFavoritesOnly
+               WRITE setShowFavoritesOnly NOTIFY showFavoritesOnlyChanged)
+
+public:
+    bool filterAcceptsRow(int row, const QModelIndex &amp;parent) const override {
+        const QModelIndex idx = sourceModel()-&gt;index(row, 0, parent);
+        const QString name = sourceModel()-&gt;data(idx, ContactModel::NameRole).toString();
+        const bool fav = sourceModel()-&gt;data(idx, ContactModel::FavoriteRole).toBool();
+
+        if (m_showFavoritesOnly &amp;&amp; !fav)
+            return false;
+        if (!m_nameFilter.isEmpty() &amp;&amp;
+            !name.contains(m_nameFilter, Qt::CaseInsensitive))
+            return false;
+
+        return true;
+    }
+
+    bool lessThan(const QModelIndex &amp;left, const QModelIndex &amp;right) const override {
+        const QString lName = sourceModel()-&gt;data(left, ContactModel::NameRole).toString();
+        const QString rName = sourceModel()-&gt;data(right, ContactModel::NameRole).toString();
+        return lName.localeAwareCompare(rName) &lt; 0;
+    }
+
+    // ... property accessors and signals
+};
+</code></pre>
+<h3 id="proxy-chains"><a class="header" href="#proxy-chains">Proxy Chains</a></h3>
+<p>Proxies can be chained — the output of one proxy feeds into another:</p>
+<pre><code>Source Model
+    │
+    ▼
+FilterProxy (apply search filter)
+    │
+    ▼
+SortProxy (sort by name)
+    │
+    ▼
+GroupingProxy (add section headers)
+    │
+    ▼
+ListView
+</code></pre>
+<p>Each proxy is a <code>QAbstractItemModel</code> from the next proxy’s perspective. This is a powerful composition model for building complex data pipelines without modifying the source model.</p>
+<hr>
+<h2 id="feeding-live-data-worker-threads-qfuture-and-qpromise"><a class="header" href="#feeding-live-data-worker-threads-qfuture-and-qpromise">Feeding Live Data: Worker Threads, <code>QFuture</code>, and <code>QPromise</code></a></h2>
+<h3 id="qfuture-and-qtconcurrent"><a class="header" href="#qfuture-and-qtconcurrent"><code>QFuture</code> and <code>QtConcurrent</code></a></h3>
+<p><code>QtConcurrent</code> provides high-level APIs for running work on a thread pool and monitoring results via <code>QFuture</code>:</p>
+<pre><code class="language-cpp">#include &lt;QtConcurrent/QtConcurrent&gt;
+
+class SearchModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    Q_INVOKABLE void search(const QString &amp;query) {
+        // Cancel any running search
+        if (m_watcher.isRunning()) {
+            m_future.cancel();
+            m_watcher.waitForFinished();
+        }
+
+        m_future = QtConcurrent::run([query]() -&gt; QList&lt;SearchResult&gt; {
+            return performExpensiveSearch(query);  // runs on thread pool
+        });
+
+        m_watcher.setFuture(m_future);
+    }
+
+private slots:
+    void onSearchFinished() {
+        if (m_future.isCanceled())
+            return;
+        setResults(m_future.result());
+    }
+
+private:
+    void setResults(const QList&lt;SearchResult&gt; &amp;results) {
+        beginResetModel();
+        m_results = results;
+        endResetModel();
+    }
+
+    QFuture&lt;QList&lt;SearchResult&gt;&gt; m_future;
+    QFutureWatcher&lt;QList&lt;SearchResult&gt;&gt; m_watcher{this};
+    QList&lt;SearchResult&gt; m_results;
+
+    // Constructor connects watcher:
+    // connect(&amp;m_watcher, &amp;QFutureWatcher&lt;...&gt;::finished, this,
+    //         &amp;SearchModel::onSearchFinished);
+};
+</code></pre>
+<p><code>QFutureWatcher</code> emits signals on the main thread even though the work runs on a pool thread — the connection is automatically a <code>QueuedConnection</code>.</p>
+<h3 id="qpromise-for-progressive-results"><a class="header" href="#qpromise-for-progressive-results"><code>QPromise</code> for Progressive Results</a></h3>
+<p><code>QPromise</code> (Qt 6.0+) allows a worker to push results incrementally as they become available:</p>
+<pre><code class="language-cpp">Q_INVOKABLE void loadProgressively(const QStringList &amp;urls) {
+    QPromise&lt;ImageData&gt; promise;
+    m_future = promise.future();
+
+    // Watch for progressive results
+    connect(&amp;m_watcher, &amp;QFutureWatcher&lt;ImageData&gt;::resultReadyAt,
+            this, [this](int index) {
+                // Called on main thread each time a result is pushed
+                appendItem(m_watcher.resultAt(index));
+            });
+    m_watcher.setFuture(m_future);
+
+    // Run the work
+    QtConcurrent::run([urls, p = std::move(promise)]() mutable {
+        p.start();
+        for (const QString &amp;url : urls) {
+            if (p.isCanceled()) break;
+            ImageData data = downloadAndDecode(url);
+            p.addResult(std::move(data));
+        }
+        p.finish();
+    });
+}
+</code></pre>
+<p>As each image loads, <code>resultReadyAt</code> fires on the main thread and <code>appendItem</code> inserts it into the model. The view updates incrementally — users see content appear as it arrives.</p>
+<h3 id="timer-driven-live-data"><a class="header" href="#timer-driven-live-data">Timer-Driven Live Data</a></h3>
+<p>For sensor data, log tailing, or real-time dashboards, a <code>QTimer</code> drives periodic model updates:</p>
+<pre><code class="language-cpp">class TelemetryModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    explicit TelemetryModel(QObject *parent = nullptr) : QAbstractListModel(parent) {
+        m_timer.setInterval(100);   // 10 Hz
+        connect(&amp;m_timer, &amp;QTimer::timeout, this, &amp;TelemetryModel::onTick);
+    }
+
+    Q_INVOKABLE void start() { m_timer.start(); }
+    Q_INVOKABLE void stop()  { m_timer.stop(); }
+
+private slots:
+    void onTick() {
+        // Read new data from a lock-free queue filled by a hardware thread
+        QList&lt;TelemetryPoint&gt; batch;
+        m_queue.drainTo(batch);
+
+        if (batch.isEmpty())
+            return;
+
+        // Trim old data
+        const int maxRows = 1000;
+        if (m_data.size() + batch.size() &gt; maxRows) {
+            const int toRemove = m_data.size() + batch.size() - maxRows;
+            beginRemoveRows(QModelIndex(), 0, toRemove - 1);
+            m_data.erase(m_data.begin(), m_data.begin() + toRemove);
+            endRemoveRows();
+        }
+
+        // Append new batch
+        const int first = m_data.size();
+        beginInsertRows(QModelIndex(), first, first + batch.size() - 1);
+        m_data.append(batch);
+        endInsertRows();
+    }
+
+    QTimer m_timer;
+    LockFreeQueue&lt;TelemetryPoint&gt; m_queue;   // filled by hardware thread
+    QList&lt;TelemetryPoint&gt; m_data;
+};
+</code></pre>
+<h3 id="thread-safety-for-model-data"><a class="header" href="#thread-safety-for-model-data">Thread Safety for Model Data</a></h3>
+<p>The golden rule: the model’s <code>data()</code>, <code>rowCount()</code>, <code>beginInsertRows()</code>, and all other interface methods must be called from the main thread only. Worker threads write to a staging buffer (a queue, a local <code>std::vector</code>) and post to the main thread.</p>
+<p>For the lock-free queue pattern above:</p>
+<ul>
+<li>Hardware/network thread: pushes to <code>m_queue</code> (lock-free)</li>
+<li>Main thread timer: drains <code>m_queue</code> and mutates the model</li>
+</ul>
+<p>This pattern gives sub-millisecond latency from data arrival to model update, with no main-thread blocking.</p>
+<hr>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>High-performance C++ models use <code>std::vector</code> for data storage (cache-friendly, O(1) random access), precise role-based <code>dataChanged</code> notifications, and the begin/end mutation API for incremental updates. <code>QSortFilterProxyModel</code> and custom proxy chains compose filtering, sorting, and grouping without touching the source model. <code>QtConcurrent</code> and <code>QPromise</code> provide ergonomic patterns for off-thread data loading with automatic main-thread delivery via <code>QFutureWatcher</code>. Timer-driven models with lock-free staging queues serve real-time data scenarios. Together, these patterns support models that remain smooth and responsive at any data scale.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part4/ch15_cpp_to_qml.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part4/ch17_scene_graph.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part4/ch15_cpp_to_qml.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part4/ch17_scene_graph.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

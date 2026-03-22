@@ -1,0 +1,579 @@
+<!DOCTYPE HTML>
+<html lang="en" class="navy sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Testing Qt Quick Applications - Developing Qt Quick / QML Applications with Python and C++</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="A practitioner&#x27;s guide for experienced developers">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "navy";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-ba02cd6a.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-e492303a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('navy')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Developing Qt Quick / QML Applications with Python and C++</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="chapter-20-testing-qt-quick-applications"><a class="header" href="#chapter-20-testing-qt-quick-applications">Chapter 20: Testing Qt Quick Applications</a></h1>
+<h2 id="qmltest-and-testcase-unit-testing-qml-components"><a class="header" href="#qmltest-and-testcase-unit-testing-qml-components"><code>qmltest</code> and <code>TestCase</code>: Unit Testing QML Components</a></h2>
+<p><code>QtTest</code>’s QML API provides a declarative testing framework where tests are written in QML and run by the <code>qmltestrunner</code> tool. Tests live alongside the components they test and can directly manipulate QML items, simulate user input, and assert on property values.</p>
+<h3 id="basic-test-structure"><a class="header" href="#basic-test-structure">Basic Test Structure</a></h3>
+<pre><code class="language-qml">// tst_counter.qml
+import QtTest
+import com.example.backend
+
+TestCase {
+    name: "CounterTests"
+
+    Counter {
+        id: counter
+    }
+
+    function test_initialValue() {
+        compare(counter.value, 0)
+    }
+
+    function test_increment() {
+        counter.increment()
+        compare(counter.value, 1)
+        counter.increment()
+        compare(counter.value, 2)
+    }
+
+    function test_reset() {
+        counter.value = 10
+        counter.reset()
+        compare(counter.value, 0)
+    }
+
+    function test_valueChanged_signal() {
+        let spy = Qt.createQmlObject(
+            "import QtTest; SignalSpy { target: counter; signalName: 'valueChanged' }",
+            testCase
+        )
+        counter.increment()
+        compare(spy.count, 1)
+    }
+}
+</code></pre>
+<p>All functions whose names start with <code>test_</code> are test functions. <code>TestCase</code> runs them alphabetically. The framework provides:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Assertion</th></tr>
+</thead>
+<tbody>
+<tr><td><code>compare(actual, expected)</code></td><td>Deep equality</td></tr>
+<tr><td><code>fuzzyCompare(a, b, delta)</code></td><td>Floating point equality within delta</td></tr>
+<tr><td><code>verify(expression)</code></td><td>Truthy value</td></tr>
+<tr><td><code>fail(message)</code></td><td>Unconditional failure</td></tr>
+<tr><td><code>skip(message)</code></td><td>Skip the test</td></tr>
+<tr><td><code>expectFail(tag, message)</code></td><td>Expect this test to fail</td></tr>
+<tr><td><code>tryCompare(object, property, value, timeout)</code></td><td>Wait for async property change</td></tr>
+<tr><td><code>tryVerify(expression, timeout)</code></td><td>Wait for condition to become true</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="testing-visual-components"><a class="header" href="#testing-visual-components">Testing Visual Components</a></h3>
+<p>To test a QML component’s visual structure and geometry, instantiate it using the <code>TestCase</code> item itself as a parent or in a dedicated window:</p>
+<pre><code class="language-qml">TestCase {
+    name: "ButtonTests"
+    width: 300; height: 200
+    visible: true     // Required for geometry to be computed
+
+    function createButton(props) {
+        return createTemporaryQmlObject(
+            `import QtQuick.Controls
+             Button { ${Object.entries(props).map(([k,v]) =&gt; `${k}: "${v}"`).join(';')} }`,
+            parent
+        )
+    }
+
+    function test_buttonText() {
+        let btn = createButton({ text: "Save" })
+        compare(btn.text, "Save")
+        verify(btn.implicitWidth &gt; 0)
+    }
+
+    function test_buttonClick() {
+        let clickCount = 0
+        let btn = createButton({ text: "OK" })
+        btn.clicked.connect(() =&gt; clickCount++)
+
+        mouseClick(btn)
+        compare(clickCount, 1)
+    }
+}
+</code></pre>
+<p><code>createTemporaryQmlObject()</code> creates an object and automatically destroys it after the test function returns — preventing test state from leaking between tests.</p>
+<h3 id="signalspy"><a class="header" href="#signalspy"><code>SignalSpy</code></a></h3>
+<p><code>SignalSpy</code> monitors signal emissions and records how many times a signal fired and what arguments it received:</p>
+<pre><code class="language-qml">SignalSpy {
+    id: spy
+    target: myObject
+    signalName: "dataReady"
+}
+
+function test_signalEmitted() {
+    spy.clear()
+    myObject.fetchData()
+    tryCompare(spy, "count", 1, 5000)  // wait up to 5 seconds
+    compare(spy.signalArguments[0][0], expectedData)
+}
+</code></pre>
+<p><code>tryCompare</code> is essential for testing asynchronous operations: it polls the property until it matches or the timeout expires.</p>
+<h3 id="simulating-user-input"><a class="header" href="#simulating-user-input">Simulating User Input</a></h3>
+<pre><code class="language-qml">function test_keyboardInput() {
+    let field = createTemporaryQmlObject(
+        "import QtQuick.Controls; TextField { }", parent)
+    field.forceActiveFocus()
+
+    keyClick(Qt.Key_H)
+    keyClick(Qt.Key_I)
+    compare(field.text, "hi")
+
+    keySequence(StandardKey.SelectAll)
+    keyClick(Qt.Key_Delete)
+    compare(field.text, "")
+}
+
+function test_mouseInteraction() {
+    // mousePress, mouseRelease, mouseClick, mouseDoubleClick
+    mouseClick(item, 10, 10, Qt.LeftButton)
+    mouseDrag(item, 0, 0, 100, 0)
+    mouseWheel(item, 0, 0, 0, -120)  // scroll down
+}
+</code></pre>
+<h3 id="running-tests"><a class="header" href="#running-tests">Running Tests</a></h3>
+<pre><code class="language-bash"># Run with qmltestrunner
+qmltestrunner -import path/to/qml/modules -input tests/
+
+# Run specific test file
+qmltestrunner -input tests/tst_counter.qml
+
+# With CMake
+add_test(NAME QmlTests
+    COMMAND qmltestrunner -import ${CMAKE_SOURCE_DIR}/qml -input ${CMAKE_CURRENT_SOURCE_DIR}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+</code></pre>
+<hr>
+<h2 id="qtest-for-c-backend-logic"><a class="header" href="#qtest-for-c-backend-logic"><code>QTest</code> for C++ Backend Logic</a></h2>
+<p>Qt’s <code>QTest</code> framework is the standard for testing C++ code in Qt projects. It integrates with <code>ctest</code> and generates output compatible with CI systems.</p>
+<h3 id="test-class-structure"><a class="header" href="#test-class-structure">Test Class Structure</a></h3>
+<pre><code class="language-cpp">// tst_contactmodel.cpp
+#include &lt;QTest&gt;
+#include "contactmodel.h"
+
+class TestContactModel : public QObject
+{
+    Q_OBJECT
+
+private slots:
+    // Test lifecycle
+    void initTestCase();     // Called once before all tests
+    void cleanupTestCase();  // Called once after all tests
+    void init();             // Called before each test
+    void cleanup();          // Called after each test
+
+    // Test functions
+    void test_initiallyEmpty();
+    void test_append();
+    void test_remove();
+    void test_dataChanged_signal();
+    void test_filterProxy();
+};
+
+void TestContactModel::init() {
+    // Called before each test — set up fresh state
+}
+
+void TestContactModel::test_initiallyEmpty() {
+    ContactModel model;
+    QCOMPARE(model.rowCount(), 0);
+}
+
+void TestContactModel::test_append() {
+    ContactModel model;
+    model.appendContact("Alice", "alice@example.com");
+    QCOMPARE(model.rowCount(), 1);
+
+    const QModelIndex idx = model.index(0);
+    QCOMPARE(model.data(idx, ContactModel::NameRole).toString(), "Alice");
+    QCOMPARE(model.data(idx, ContactModel::EmailRole).toString(), "alice@example.com");
+}
+
+void TestContactModel::test_remove() {
+    ContactModel model;
+    model.appendContact("Alice", "alice@example.com");
+    model.appendContact("Bob", "bob@example.com");
+
+    model.removeContact(0);
+
+    QCOMPARE(model.rowCount(), 1);
+    QCOMPARE(model.data(model.index(0), ContactModel::NameRole).toString(), "Bob");
+}
+
+void TestContactModel::test_dataChanged_signal() {
+    ContactModel model;
+    model.appendContact("Alice", "alice@example.com");
+
+    QSignalSpy spy(&amp;model, &amp;ContactModel::dataChanged);
+    model.updateEmail(0, "new@example.com");
+
+    QCOMPARE(spy.count(), 1);
+    // Verify correct roles in the signal
+    const QList&lt;int&gt; roles = spy[0][2].value&lt;QList&lt;int&gt;&gt;();
+    QVERIFY(roles.contains(ContactModel::EmailRole));
+    QVERIFY(!roles.contains(ContactModel::NameRole));
+}
+
+QTEST_MAIN(TestContactModel)
+#include "tst_contactmodel.moc"
+</code></pre>
+<h3 id="qsignalspy"><a class="header" href="#qsignalspy"><code>QSignalSpy</code></a></h3>
+<p><code>QSignalSpy</code> records signal emissions. It is the QTest equivalent of QML’s <code>SignalSpy</code>:</p>
+<pre><code class="language-cpp">QSignalSpy spy(&amp;model, &amp;QAbstractItemModel::rowsInserted);
+model.appendContact("Test", "test@example.com");
+
+QCOMPARE(spy.count(), 1);
+// Arguments: parent, first, last
+QCOMPARE(spy[0][1].toInt(), 0);   // first row = 0
+QCOMPARE(spy[0][2].toInt(), 0);   // last row = 0
+</code></pre>
+<h3 id="data-driven-tests-with-_data-functions"><a class="header" href="#data-driven-tests-with-_data-functions">Data-Driven Tests with <code>_data()</code> Functions</a></h3>
+<p>Test functions paired with a <code>_data()</code> function run once per row of the data table:</p>
+<pre><code class="language-cpp">void TestContactModel::test_filterProxy_data() {
+    QTest::addColumn&lt;QString&gt;("filterString");
+    QTest::addColumn&lt;int&gt;("expectedCount");
+
+    QTest::newRow("empty filter") &lt;&lt; "" &lt;&lt; 3;
+    QTest::newRow("partial match") &lt;&lt; "ali" &lt;&lt; 1;
+    QTest::newRow("no match") &lt;&lt; "xyz" &lt;&lt; 0;
+    QTest::newRow("case insensitive") &lt;&lt; "BOB" &lt;&lt; 1;
+}
+
+void TestContactModel::test_filterProxy() {
+    QFETCH(QString, filterString);
+    QFETCH(int, expectedCount);
+
+    ContactModel source;
+    source.appendContact("Alice", "alice@example.com");
+    source.appendContact("Bob", "bob@example.com");
+    source.appendContact("Charlie", "charlie@example.com");
+
+    QSortFilterProxyModel proxy;
+    proxy.setSourceModel(&amp;source);
+    proxy.setFilterRole(ContactModel::NameRole);
+    proxy.setFilterCaseSensitivity(Qt::CaseInsensitive);
+    proxy.setFilterFixedString(filterString);
+
+    QCOMPARE(proxy.rowCount(), expectedCount);
+}
+</code></pre>
+<h3 id="testing-asynchronous-c-code"><a class="header" href="#testing-asynchronous-c-code">Testing Asynchronous C++ Code</a></h3>
+<p>For code that uses <code>QFuture</code>, <code>QTimer</code>, or signals to deliver results asynchronously:</p>
+<pre><code class="language-cpp">void TestSearch::test_asyncSearch() {
+    SearchModel model;
+    QSignalSpy spy(&amp;model, &amp;SearchModel::searchComplete);
+
+    model.search("qt quick");
+
+    // Wait for the signal, up to 5 seconds
+    QVERIFY(spy.wait(5000));
+    QCOMPARE(spy.count(), 1);
+    QVERIFY(model.rowCount() &gt; 0);
+}
+</code></pre>
+<p><code>QSignalSpy::wait(ms)</code> runs the event loop until the signal fires or the timeout expires.</p>
+<h3 id="cmake-test-setup"><a class="header" href="#cmake-test-setup">CMake Test Setup</a></h3>
+<pre><code class="language-cmake"># In tests/CMakeLists.txt
+find_package(Qt6 REQUIRED COMPONENTS Test)
+
+function(add_qt_test name)
+    qt_add_executable(${name} ${name}.cpp)
+    target_link_libraries(${name} PRIVATE Qt6::Test myapp_backend)
+    add_test(NAME ${name} COMMAND ${name})
+endfunction()
+
+add_qt_test(tst_contactmodel)
+add_qt_test(tst_searchservice)
+add_qt_test(tst_filterproxy)
+</code></pre>
+<hr>
+<h2 id="end-to-end-ui-testing-strategies"><a class="header" href="#end-to-end-ui-testing-strategies">End-to-End UI Testing Strategies</a></h2>
+<p>Full end-to-end testing of Qt Quick UIs — simulating user interactions through the complete application stack — is the most difficult testing layer.</p>
+<h3 id="approach-1-squish-commercial"><a class="header" href="#approach-1-squish-commercial">Approach 1: Squish (Commercial)</a></h3>
+<p>Froglogic’s Squish is the industry-standard test automation tool for Qt applications. It supports:</p>
+<ul>
+<li>Object identification by name, type, or property</li>
+<li>Recording and playback of interactions</li>
+<li>Script-based tests in Python, JavaScript, Tcl, Ruby, or Perl</li>
+<li>Image recognition for custom-drawn items</li>
+</ul>
+<pre><code class="language-python"># Squish test example (Python API)
+startApplication("myapp")
+clickButton(waitForObject(":mainWindow.saveButton_Button"))
+type(waitForObject(":dialog.filenameField_TextField"), "output.pdf")
+clickButton(waitForObject(":dialog.okButton_Button"))
+waitForObjectExists(":statusBar.saveSuccess_Label")
+</code></pre>
+<h3 id="approach-2-qabstractitemmodeltester"><a class="header" href="#approach-2-qabstractitemmodeltester">Approach 2: <code>QAbstractItemModelTester</code></a></h3>
+<p>For model testing specifically, <code>QAbstractItemModelTester</code> (from <code>Qt6::Test</code>) automatically validates that a model implementation follows the contract — correct begin/end bracket pairing, valid indices, consistent row counts:</p>
+<pre><code class="language-cpp">void TestContactModel::test_modelIntegrity() {
+    ContactModel model;
+    auto *tester = new QAbstractItemModelTester(
+        &amp;model,
+        QAbstractItemModelTester::FailureReportingMode::Fatal,
+        this
+    );
+
+    // Perform model mutations — tester automatically validates each change
+    model.appendContact("Alice", "alice@example.com");
+    model.appendContact("Bob", "bob@example.com");
+    model.removeContact(0);
+}
+</code></pre>
+<p>This catches common model implementation bugs (missing <code>beginInsertRows</code>, wrong row counts after mutation) that would otherwise appear as subtle view glitches.</p>
+<h3 id="approach-3-headless-testing-with-qoffscreensurface"><a class="header" href="#approach-3-headless-testing-with-qoffscreensurface">Approach 3: Headless Testing with <code>QOffscreenSurface</code></a></h3>
+<p>For testing visual behavior without a display:</p>
+<pre><code class="language-bash">QT_QPA_PLATFORM=offscreen ./qmltestrunner -input tests/
+</code></pre>
+<p>The offscreen platform renders to memory buffers. Geometry is computed, animations run, and items respond to input — but nothing appears on screen. This is suitable for CI environments without a display.</p>
+<h3 id="approach-4-screenshot-based-regression-testing"><a class="header" href="#approach-4-screenshot-based-regression-testing">Approach 4: Screenshot-Based Regression Testing</a></h3>
+<p>For visual regression detection, render items to images and compare:</p>
+<pre><code class="language-cpp">void TestVisuals::test_buttonAppearance() {
+    QQuickView view;
+    view.setSource(QUrl("qrc:/qml/components/PrimaryButton.qml"));
+    view.show();
+    QTest::qWaitForWindowExposed(&amp;view);
+
+    // Grab the scene
+    QImage rendered = view.grabWindow();
+    QImage reference(":/test_references/primary_button_normal.png");
+
+    QVERIFY(imagesMatch(rendered, reference, /* tolerance= */ 2));
+}
+</code></pre>
+<p>Store reference images in version control. Run on CI with a fixed display DPI to avoid platform-dependent differences.</p>
+<hr>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>Testing a Qt Quick application spans three layers. QML’s <code>TestCase</code> framework tests component behavior, user input simulation, and signal-driven async operations directly in QML. <code>QTest</code> handles C++ backend unit testing with typed assertions, <code>QSignalSpy</code>, data-driven test tables, and <code>QAbstractItemModelTester</code> for model contract validation. End-to-end testing relies on either commercial tools (Squish), headless rendering (offscreen platform), or screenshot regression tests. The highest-leverage tests are those for C++ models and service logic — they run fast, require no display, and cover the most error-prone code. QML component tests complement these for UI-specific behavior and accessibility.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part5/ch19_i18n_a11y.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../part5/ch21_architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part5/ch19_i18n_a11y.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../part5/ch21_architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
