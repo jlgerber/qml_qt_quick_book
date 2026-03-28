@@ -1,4 +1,4 @@
-# Developing Qt Quick / QML Applications with Python and C++
+# Developing Qt Quick and QML Applications with Python and C++
 
 A practitioner's guide for experienced developers.
 

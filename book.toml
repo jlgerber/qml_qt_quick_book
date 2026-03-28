@@ -1,5 +1,5 @@
 [book]
-title = "Developing Qt Quick / QML Applications with Python and C++"
+title = "Developing Qt Quick and QML Applications with Python and C++"
 description = "A practitioner's guide for experienced developers"
 authors = []
 language = "en"
@@ -30,3 +30,6 @@ expand = true
 heading-split-level = 3
 
 [output.pdf]
+
+[output.epub]
+output-file = "qt-quick-qml-python-cpp.epub"
