@@ -1,0 +1,3 @@
+module com.example.contacts
+ContactListView  1.0 ContactListView.qml
+AddContactDialog 1.0 AddContactDialog.qml

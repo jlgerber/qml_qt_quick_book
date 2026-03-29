@@ -1,0 +1,53 @@
+# pyproject.toml – Chapter 13: Deployment
+# ---------------------------------------------------------------------------
+# Standard Python packaging metadata (PEP 517 / PEP 621).
+# pyside6-deploy reads [tool.pyside6-project] for its own configuration.
+# ---------------------------------------------------------------------------
+
+[build-system]
+requires      = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+# ---------------------------------------------------------------------------
+# Project metadata
+# ---------------------------------------------------------------------------
+[project]
+name        = "qt-book-ch13-deployment"
+version     = "1.0.0"
+description = "Chapter 13 deployment example – minimal PySide6 Qt Quick app"
+readme      = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "PySide6>=6.5",
+]
+
+# Optional: install the app as a console script.
+[project.scripts]
+ch13-deployment = "main:main"
+
+# ---------------------------------------------------------------------------
+# pyside6-deploy / pyside6-project configuration
+#
+# input_file     – the Python entry point passed to Nuitka
+# project_file   – (optional) alternate .pyproject path
+# nuitka.extra-args – forwarded verbatim to the Nuitka command line
+# ---------------------------------------------------------------------------
+[tool.pyside6-project]
+input_file = "main.py"
+
+    [tool.pyside6-project.nuitka]
+    extra-args = [
+        "--standalone",
+        "--follow-imports",
+        "--enable-plugin=pyside6",
+        # Embed the QML files as Qt resources so no external .qml needed.
+        "--include-data-dir=qml=qml",
+        # Windows: set the application icon.
+        # "--windows-icon-from-ico=assets/icon.ico",
+        # macOS: set the bundle identifier.
+        # "--macos-app-name=DeployApp",
+        # "--macos-app-version=1.0.0",
+        # Uncomment to produce a single-file executable (slower startup).
+        # "--onefile",
+    ]
