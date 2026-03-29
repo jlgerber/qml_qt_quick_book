@@ -33,6 +33,16 @@ ApplicationWindow {
             anchors.rightMargin: 20
             spacing: 24
 
+            // ── GroupBox sizing note ──────────────────────────────────────────
+            // GroupBox.implicitHeight is derived from contentItem.implicitHeight.
+            // The default contentItem is a plain Item whose implicitHeight is
+            // always 0 — it does not grow to fit its children.  Without an
+            // explicit override every GroupBox collapses to its title-bar height
+            // and all sections overlap.
+            // Fix: set implicitHeight = topPadding + bottomPadding + <canvas height>
+            // directly on each GroupBox.  topPadding already includes the title
+            // label, so this formula gives the correct total height.
+
             // ── 1. DragHandler ───────────────────────────────────────────────
             GroupBox {
                 Layout.fillWidth: true

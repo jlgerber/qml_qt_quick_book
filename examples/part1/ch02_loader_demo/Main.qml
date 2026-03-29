@@ -32,16 +32,45 @@ ApplicationWindow {
         anchors.margins: 20
         spacing: 20
 
+        // ── GroupBox + Loader dynamic sizing — problem and solution ──────────
+        //
+        // PROBLEM (three interacting issues):
+        //
+        // 1. GroupBox.implicitHeight is derived from contentItem.implicitHeight.
+        //    The default contentItem is a plain Item whose implicitHeight is
+        //    always 0, so a GroupBox with only plain children collapses to its
+        //    title-bar height.
+        //
+        // 2. Even when a ColumnLayout is set as the contentItem, GroupBox also
+        //    writes contentItem.height = availableHeight (derived from the
+        //    GroupBox's own height).  This creates a feedback loop: on expand
+        //    the layout grows correctly, but on collapse the explicit height
+        //    assignment keeps the layout stuck at the old (expanded) size.
+        //
+        // 3. Loader.implicitHeight tracks item.implicitHeight, not item.height.
+        //    Loaded components that declare 'height: N' leave
+        //    Loader.implicitHeight at 0; the ColumnLayout sees no height to
+        //    allocate, so nothing appears.
+        //
+        // SOLUTION:
+        //
+        // • Loaded components (DetailPane, HeavyComponent) use implicitHeight
+        //   so Loader.implicitHeight propagates correctly.
+        //
+        // • Each GroupBox overrides implicitHeight directly:
+        //     implicitHeight: topPadding + bottomPadding + layout.implicitHeight
+        //   topPadding already includes the title label, so this formula gives
+        //   the correct total height and avoids the contentItem feedback loop.
+        //
+        // • The Loader uses Layout.preferredHeight (not implicitHeight) to drive
+        //   its layout slot.  This survives the GroupBox height-assignment, so
+        //   the slot — and therefore the GroupBox — actually collapses to zero
+        //   when the item is hidden.  A Behavior animates the transition.
+
         // ── Section 1: toggle Loader.active ──────────────────────────────────
         GroupBox {
             Layout.fillWidth: true
             title: "1 · Loader.active — show / hide on demand"
-
-            // Override implicitHeight so the GroupBox tracks the inner
-            // ColumnLayout directly.  The default GroupBox.implicitHeight uses
-            // contentItem.implicitHeight, but GroupBox also writes an explicit
-            // height onto contentItem (= availableHeight), which can prevent
-            // shrink-back.  Binding directly to the child layout avoids that.
             implicitHeight: topPadding + bottomPadding + section1Layout.implicitHeight
 
             ColumnLayout {
