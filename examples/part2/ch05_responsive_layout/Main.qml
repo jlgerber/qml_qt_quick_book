@@ -127,6 +127,7 @@ ApplicationWindow {
         required property string iconChar
         property bool  selected: false
 
+        Layout.fillWidth: true   // must fill the sidebar ColumnLayout or width is 0
         height:  44
         radius:   8
         color:    selected ? Qt.rgba(0.42, 0.23, 0.93, 0.12) : "transparent"
@@ -167,8 +168,10 @@ ApplicationWindow {
         Rectangle {
             id: sidebar
 
-            // Animated width: 220 when visible, 0 when hidden
-            width: root.isExpanded ? 220 : 0
+            // Layout.preferredWidth controls the sidebar's slot in the RowLayout.
+            // Using 'width:' here would be overridden by the layout engine;
+            // preferredWidth is the correct hook for layout-managed items.
+            Layout.preferredWidth: root.isExpanded ? 220 : 0
             Layout.fillHeight: true
 
             color:   "#ffffff"
@@ -181,7 +184,7 @@ ApplicationWindow {
                 color: "#e5e7eb"
             }
 
-            Behavior on width {
+            Behavior on Layout.preferredWidth {
                 NumberAnimation { duration: 260; easing.type: Easing.OutCubic }
             }
 
@@ -305,12 +308,7 @@ ApplicationWindow {
                         Repeater {
                             model: cardModel
                             delegate: MetricCard {
-                                required property string cardTitle
-                                required property string subtitle
-                                required property string value
-                                required property string trend
-
-                                Layout.fillWidth:  true
+                                Layout.fillWidth:   true
                                 Layout.leftMargin:  16
                                 Layout.rightMargin: 16
                             }
@@ -339,11 +337,17 @@ ApplicationWindow {
 
                         Repeater {
                             model: cardModel
+                            // No required property re-declarations here: MetricCard
+                            // already defines them, and pragma ComponentBehavior: Bound
+                            // makes the Repeater inject matching model roles into those
+                            // existing required properties automatically.
+                            // Re-declaring them creates duplicate required properties
+                            // that the Repeater cannot satisfy, causing the delegate error.
                             delegate: MetricCard {
-                                required property string cardTitle
-                                required property string subtitle
-                                required property string value
-                                required property string trend
+                                // index is a Repeater context property.  With
+                                // ComponentBehavior: Bound it must be explicitly
+                                // declared to be accessible inside the delegate.
+                                required property int index
 
                                 Layout.fillWidth:   true
                                 Layout.leftMargin:  index % (root.isExpanded ? 3 : 2) === 0 ? 20 : 0
