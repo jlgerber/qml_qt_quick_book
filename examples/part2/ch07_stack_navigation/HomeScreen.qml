@@ -109,6 +109,11 @@ Item {
                                 anchors.centerIn: parent
                                 text:  modelData.icon
                                 font.pixelSize: 26
+                                // Fontconfig on this system routes some emoji
+                                // (e.g. 👥 📅) to NotoEmoji Nerd Font Mono whose
+                                // glyphs render invisibly at this size.  Pinning
+                                // to Noto Color Emoji ensures consistent rendering.
+                                font.family: "Noto Color Emoji"
                             }
                         }
 
