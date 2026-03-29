@@ -28,6 +28,7 @@ ApplicationWindow {
         { initials: "AB", fullName: "Alice Brown",    email: "alice@example.com",   avatarColor: "#6c3aec", section: "B" },
         { initials: "BC", fullName: "Bob Carter",     email: "bob@example.com",     avatarColor: "#0ea5e9", section: "C" },
         { initials: "CD", fullName: "Carol Davis",    email: "carol@example.com",   avatarColor: "#10b981", section: "D" },
+        { initials: "CD", fullName: "Craig Davis",    email: "craigd@example.com",  avatarColor: "#1043b9ff", section: "D" },
         { initials: "DE", fullName: "David Evans",    email: "david@example.com",   avatarColor: "#f59e0b", section: "E" },
         { initials: "EF", fullName: "Eva Foster",     email: "eva@example.com",     avatarColor: "#ef4444", section: "F" },
         { initials: "FG", fullName: "Frank Garcia",   email: "frank@example.com",   avatarColor: "#8b5cf6", section: "G" },
@@ -130,9 +131,8 @@ ApplicationWindow {
                             color:   "#9ca3af"
                             visible: searchInput.text.length > 0
 
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked:    searchInput.text = ""
+                            TapHandler {
+                                onTapped: searchInput.text = ""
                             }
                         }
                     }
@@ -150,6 +150,28 @@ ApplicationWindow {
                 anchors.fill: parent
                 clip:         true
                 spacing:      0
+
+                // Index of the delegate currently under the mouse cursor.
+                // -1 when the mouse is outside the list or over a section header.
+                // Delegates read this via ListView.view.hoveredIndex.
+                property int hoveredIndex: -1
+
+                // Track the mouse at the ListView level.  Hover detection inside
+                // individual delegates is unreliable: Flickable intercepts or
+                // resets hover state during its internal layout passes.  Owning
+                // the tracking here and distributing via hoveredIndex is the
+                // correct pattern for ListView row highlighting.
+                HoverHandler {
+                    id: listHover
+                    onHoveredChanged:
+                        if (!hovered) contactList.hoveredIndex = -1
+                    onPointChanged: {
+                        if (hovered)
+                            contactList.hoveredIndex = contactList.indexAt(
+                                point.position.x,
+                                point.position.y + contactList.contentY)
+                    }
+                }
 
                 model:        root.filteredContacts
 
@@ -178,8 +200,13 @@ ApplicationWindow {
                 }
 
                 delegate: ContactDelegate {
-                    // Map JS object properties to required properties
+                    required property int index
                     required property var modelData
+
+                    // Pass index under an unambiguous name to avoid QML's
+                    // built-in `index` context property shadowing the binding
+                    // inside ContactDelegate.qml.
+                    delegateIndex: index
 
                     initials:    modelData.initials
                     fullName:    modelData.fullName

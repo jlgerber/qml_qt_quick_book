@@ -15,21 +15,31 @@ Item {
     required property string email
     required property string avatarColor
 
+    // Row index supplied explicitly by the delegate wrapper in Main.qml.
+    // Named delegateIndex (not index) to avoid collision with QML's built-in
+    // index context property, which can produce unexpected binding behaviour.
+    property int delegateIndex: -1
+
     // ── sizing ────────────────────────────────────────────────────────────
     height: row.implicitHeight + 20
     width:  ListView.view ? ListView.view.width : 400
 
     // ── hover highlight ───────────────────────────────────────────────────
+    // Hover is NOT tracked inside the delegate.  HoverHandler and MouseArea
+    // both fail to maintain stable hover state inside a ListView/Flickable:
+    // events are intercepted or the state resets when the Flickable performs
+    // its internal layout pass.
+    //
+    // Instead, the ListView in Main.qml tracks the mouse position via its own
+    // HoverHandler and stores hoveredIndex.  Each delegate simply compares its
+    // injected `index` context property to that value.
+    readonly property bool isHovered: ListView.view !== null
+                                      && ListView.view.hoveredIndex === delegateIndex
+
     Rectangle {
         anchors.fill: parent
-        color:        hoverArea.containsMouse ? "#f5f3ff" : "transparent"
+        color:        root.isHovered ? "#f5f3ff" : "transparent"
         Behavior on color { ColorAnimation { duration: 120 } }
-    }
-
-    MouseArea {
-        id:          hoverArea
-        anchors.fill: parent
-        hoverEnabled: true
     }
 
     // Thin bottom separator
@@ -96,4 +106,5 @@ Item {
             color: "#d1d5db"
         }
     }
+
 }
