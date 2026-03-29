@@ -85,14 +85,39 @@ T.Button {
             visible: control.visualFocus
         }
 
-        // Elevation shadow (simple drop-shadow via layer effect)
-        layer.enabled: control.enabled && !control.flat
-        layer.effect: MultiEffect {
-            shadowEnabled:    true
-            shadowColor:      Qt.rgba(0.42, 0.23, 0.93, 0.35)
-            shadowVerticalOffset:   2
-            shadowHorizontalOffset: 0
-            shadowBlur:       0.6
+        // Elevation shadow — Qt version compatibility note:
+        //
+        // Current implementation uses a plain offset Rectangle (works on all
+        // Qt 6 versions, no extra imports required).
+        //
+        // To upgrade to a true blurred shadow on Qt ≥ 6.5, remove the
+        // Rectangle below and replace it with:
+        //
+        //   layer.enabled: control.enabled && !control.flat
+        //   layer.effect: MultiEffect {
+        //       shadowEnabled:          true
+        //       shadowColor:            Qt.rgba(0.42, 0.23, 0.93, 0.35)
+        //       shadowVerticalOffset:   2
+        //       shadowHorizontalOffset: 0
+        //       shadowBlur:             0.6
+        //   }
+        //
+        // On Qt 6.3–6.4, import Qt5Compat.GraphicalEffects instead and use:
+        //   layer.enabled: control.enabled && !control.flat
+        //   layer.effect: DropShadow {
+        //       color:          Qt.rgba(0.42, 0.23, 0.93, 0.35)
+        //       verticalOffset: 2
+        //       radius:         8
+        //       samples:        17
+        //   }
+        Rectangle {
+            anchors.fill: parent
+            anchors.margins: -2
+            z: -1
+            radius: bg.radius + 2
+            color: Qt.rgba(0.42, 0.23, 0.93, 0.30)
+            visible: control.enabled && !control.flat
+            transform: Translate { y: 2 }
         }
     }
 }

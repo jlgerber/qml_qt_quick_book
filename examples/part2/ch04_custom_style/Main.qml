@@ -9,12 +9,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
-// Tell Qt Quick Controls to use our custom style at startup.
-// In a real project you would set QT_QUICK_CONTROLS_STYLE=MyStyle or call
-// QQuickStyle::setStyle("MyStyle") from C++.  When running with `qml` we
-// use the pragma here for convenience.
-pragma ComponentBehavior: Bound
-
 ApplicationWindow {
     id:      root
     title:   "Chapter 4 – Custom Style"

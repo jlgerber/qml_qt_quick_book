@@ -51,13 +51,28 @@ ApplicationWindow {
             ColorAnimation { duration: 250 }
         }
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled:          true
-            shadowColor:            Qt.rgba(0, 0, 0, 0.09)
-            shadowVerticalOffset:   3
-            shadowBlur:             0.7
-        }
+        // Elevation shadow — Qt version compatibility note:
+        //
+        // No shadow is applied here because the card uses clip:true (needed to
+        // hide the body text while the height animates), which would clip any
+        // child shadow Rectangle.
+        //
+        // To add a true blurred shadow on Qt ≥ 6.5, wrap the card in a parent
+        // Rectangle (no clip) that carries the shadow, and keep clip:true only
+        // on the inner card.  On the wrapper, add:
+        //
+        //   layer.enabled: true
+        //   layer.effect: MultiEffect {
+        //       shadowEnabled:        true
+        //       shadowColor:          Qt.rgba(0, 0, 0, 0.09)
+        //       shadowVerticalOffset: 3
+        //       shadowBlur:           0.7
+        //   }
+        //
+        // On Qt 6.3–6.4, use the same wrapper approach with:
+        //   import Qt5Compat.GraphicalEffects
+        //   layer.enabled: true
+        //   layer.effect: DropShadow { color: Qt.rgba(0,0,0,0.09); verticalOffset: 3; radius: 10; samples: 21 }
 
         // ── States ────────────────────────────────────────────────────────
         states: [

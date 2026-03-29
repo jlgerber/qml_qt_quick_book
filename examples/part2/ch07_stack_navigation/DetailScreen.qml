@@ -158,12 +158,37 @@ Item {
                         radius:             10
                         color:              "#ffffff"
 
-                        layer.enabled: true
-                        layer.effect: MultiEffect {
-                            shadowEnabled:        true
-                            shadowColor:          Qt.rgba(0, 0, 0, 0.06)
-                            shadowVerticalOffset: 2
-                            shadowBlur:           0.6
+                        // Elevation shadow — Qt version compatibility note:
+                        //
+                        // Current implementation uses a plain offset Rectangle
+                        // (works on all Qt 6 versions, no extra imports required).
+                        //
+                        // To upgrade to a true blurred shadow on Qt ≥ 6.5, remove
+                        // the Rectangle below and replace it with:
+                        //
+                        //   layer.enabled: true
+                        //   layer.effect: MultiEffect {
+                        //       shadowEnabled:        true
+                        //       shadowColor:          Qt.rgba(0, 0, 0, 0.06)
+                        //       shadowVerticalOffset: 2
+                        //       shadowBlur:           0.6
+                        //   }
+                        //
+                        // On Qt 6.3–6.4, import Qt5Compat.GraphicalEffects and use:
+                        //   layer.enabled: true
+                        //   layer.effect: DropShadow {
+                        //       color:          Qt.rgba(0, 0, 0, 0.06)
+                        //       verticalOffset: 2
+                        //       radius:         8
+                        //       samples:        17
+                        //   }
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: -2
+                            z: -1
+                            radius: parent.radius + 2
+                            color: Qt.rgba(0, 0, 0, 0.06)
+                            transform: Translate { y: 2 }
                         }
 
                         RowLayout {
