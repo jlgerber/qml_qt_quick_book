@@ -9,7 +9,8 @@ Rectangle {
 
     required property string label
     required property string iconChar
-    property bool selected: false
+    property bool selected:   false
+    property bool showLabel:  true
 
     // Always fill the parent ColumnLayout horizontally; without this the
     // Rectangle's implicit width is 0 and the row collapses to nothing.
@@ -28,15 +29,18 @@ Rectangle {
         spacing: 10
 
         Text {
-            text:           navItem.iconChar
-            font.pixelSize: 18
-            color:          navItem.selected ? "#6c3aec" : "#6b7280"
+            text:                navItem.iconChar
+            font.pixelSize:      18
+            color:               navItem.selected ? "#6c3aec" : "#6b7280"
+            Layout.fillWidth:    !navItem.showLabel
+            horizontalAlignment: Text.AlignHCenter
         }
         Text {
             text:             navItem.label
             font { pixelSize: 14; weight: navItem.selected ? Font.Medium : Font.Normal }
             color:            navItem.selected ? "#6c3aec" : "#374151"
             Layout.fillWidth: true
+            visible:          navItem.showLabel
         }
     }
 

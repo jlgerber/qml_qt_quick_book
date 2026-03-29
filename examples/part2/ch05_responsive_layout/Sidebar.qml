@@ -1,5 +1,9 @@
-// Sidebar.qml — collapsible navigation panel shown at the expanded breakpoint.
-// Animates its width between 220 px (visible) and 0 (hidden).
+// Sidebar.qml — collapsible navigation panel with three states:
+//
+//   expanded  (isExpanded)             220 px — icons + labels
+//   normal    (!isCompact, !isExpanded) 56 px — icons only
+//   compact   (isCompact)               0 px — hidden
+//
 // clip:true on the Rectangle hides content during the slide animation without
 // a separate opacity animation (which would cause the content to vanish before
 // the slide completes).
@@ -10,13 +14,18 @@ import QtQuick.Layouts
 Rectangle {
     id: sidebar
 
-    // Supplied by Main.qml — drives the show/hide transition.
+    // Supplied by Main.qml — drive the three-state width transition.
+    required property bool isCompact
     required property bool isExpanded
 
     // Use Layout.preferredWidth rather than width: because this item lives
     // inside a RowLayout.  The layout engine owns 'width' on its children;
     // preferredWidth is the correct hook for communicating desired size.
-    Layout.preferredWidth: isExpanded ? 220 : 0
+    //
+    //   expanded → 220 px (icons + labels)
+    //   normal   →  56 px (icons only)
+    //   compact  →   0 px (hidden)
+    Layout.preferredWidth: isExpanded ? 220 : isCompact ? 0 : 56
     Layout.fillHeight:     true
 
     color: "#ffffff"
@@ -36,26 +45,29 @@ Rectangle {
     ColumnLayout {
         anchors {
             fill:    parent
-            margins: 16
+            // 16 px in expanded mode; 6 px in icon-only mode so that each
+            // NavItem is 56 − 12 = 44 px wide — square with its 44 px height.
+            margins: sidebar.isExpanded ? 16 : 6
         }
         spacing: 4
 
-        // App brand
+        // App brand — hidden in icon-only (normal) mode
         Text {
-            text:  "Dashboard"
+            text:                "Dashboard"
             font { pixelSize: 18; weight: Font.Bold }
-            color: "#111827"
+            color:               "#111827"
             Layout.bottomMargin: 16
+            visible:             sidebar.isExpanded
         }
 
-        NavItem { label: "Overview";  iconChar: "◉"; selected: true }
-        NavItem { label: "Analytics"; iconChar: "📊" }
-        NavItem { label: "Users";     iconChar: "👥" }
-        NavItem { label: "Revenue";   iconChar: "💰" }
-        NavItem { label: "Settings";  iconChar: "⚙"  }
+        NavItem { label: "Overview";  iconChar: "◉"; selected: true; showLabel: sidebar.isExpanded }
+        NavItem { label: "Analytics"; iconChar: "📊";                 showLabel: sidebar.isExpanded }
+        NavItem { label: "Users";     iconChar: "👥";                 showLabel: sidebar.isExpanded }
+        NavItem { label: "Revenue";   iconChar: "💰";                 showLabel: sidebar.isExpanded }
+        NavItem { label: "Settings";  iconChar: "⚙";                  showLabel: sidebar.isExpanded }
 
         Item { Layout.fillHeight: true }
 
-        NavItem { label: "Sign out";  iconChar: "⏏" }
+        NavItem { label: "Sign out";  iconChar: "⏏";                  showLabel: sidebar.isExpanded }
     }
 }

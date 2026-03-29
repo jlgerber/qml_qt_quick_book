@@ -51,8 +51,9 @@ ApplicationWindow {
         anchors.fill: parent
         spacing:      0
 
-        // ── Sidebar (expanded breakpoint only) ────────────────────────────
+        // ── Sidebar ───────────────────────────────────────────────────────
         Sidebar {
+            isCompact:  root.isCompact
             isExpanded: root.isExpanded
         }
 
