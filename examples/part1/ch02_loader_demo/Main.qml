@@ -37,11 +37,16 @@ ApplicationWindow {
             Layout.fillWidth: true
             title: "1 · Loader.active — show / hide on demand"
 
-            // Make the ColumnLayout the GroupBox's contentItem so that
-            // GroupBox.implicitHeight tracks contentItem.implicitHeight, which
-            // in turn tracks the Loader's implicitHeight (and therefore the
-            // loaded item's implicitHeight).
-            contentItem: ColumnLayout {
+            // Override implicitHeight so the GroupBox tracks the inner
+            // ColumnLayout directly.  The default GroupBox.implicitHeight uses
+            // contentItem.implicitHeight, but GroupBox also writes an explicit
+            // height onto contentItem (= availableHeight), which can prevent
+            // shrink-back.  Binding directly to the child layout avoids that.
+            implicitHeight: topPadding + bottomPadding + section1Layout.implicitHeight
+
+            ColumnLayout {
+                id: section1Layout
+                width: parent.availableWidth
                 spacing: 10
 
                 RowLayout {
@@ -58,24 +63,26 @@ ApplicationWindow {
                     }
                 }
 
-                // The Loader itself — uses setSource() so we can pass initial props.
+                // Layout.preferredHeight drives the layout slot; it animates to 0
+                // on hide so the GroupBox actually shrinks.  clip prevents the
+                // fading content from bleeding outside the collapsing rect.
                 Loader {
                     id: detailLoader
                     Layout.fillWidth: true
+                    Layout.preferredHeight: status === Loader.Ready ? implicitHeight : 0
+                    clip: true
                     active: false
 
-                    // setSource is called each time active flips to true.
                     onActiveChanged: {
                         if (active) {
-                            // Pass a required property as an initial property map.
                             setSource("DetailPane.qml", {
                                 title: "Order Details — Invoice #4892"
                             })
                         }
                     }
 
-                    // Animate the appearance / disappearance.
-                    Behavior on opacity { NumberAnimation { duration: 180 } }
+                    Behavior on Layout.preferredHeight { NumberAnimation { duration: 180 } }
+                    Behavior on opacity                { NumberAnimation { duration: 180 } }
                     opacity: status === Loader.Ready ? 1.0 : 0.0
                 }
             }
@@ -86,7 +93,11 @@ ApplicationWindow {
             Layout.fillWidth: true
             title: "2 · Loader.asynchronous — non-blocking load with BusyIndicator"
 
-            contentItem: ColumnLayout {
+            implicitHeight: topPadding + bottomPadding + section2Layout.implicitHeight
+
+            ColumnLayout {
+                id: section2Layout
+                width: parent.availableWidth
                 spacing: 10
 
                 RowLayout {
@@ -95,9 +106,7 @@ ApplicationWindow {
                         text: "Load Heavy Component"
                         enabled: asyncLoader.status !== Loader.Loading
                                && asyncLoader.status !== Loader.Ready
-                        onClicked: {
-                            asyncLoader.active = true
-                        }
+                        onClicked: asyncLoader.active = true
                     }
                     Button {
                         text: "Unload"
@@ -118,7 +127,6 @@ ApplicationWindow {
                     }
                 }
 
-                // BusyIndicator shown only while the Loader is working.
                 BusyIndicator {
                     running: asyncLoader.status === Loader.Loading
                     visible: running
@@ -128,6 +136,8 @@ ApplicationWindow {
                 Loader {
                     id: asyncLoader
                     Layout.fillWidth: true
+                    Layout.preferredHeight: status === Loader.Ready ? implicitHeight : 0
+                    clip: true
                     active: false
                     asynchronous: true
                     // NOTE: do NOT also set 'source' here — setSource() below
@@ -136,18 +146,17 @@ ApplicationWindow {
                     // binding fires first without the required property, causing
                     // a Status:Error before setSource() can correct it.
                     onActiveChanged: {
-                        if (active) {
+                        if (active)
                             setSource("HeavyComponent.qml", { itemCount: 250 })
-                        }
                     }
 
-                    // Give keyboard focus to the loaded item once it is ready.
                     onLoaded: {
                         console.log("HeavyComponent finished loading — giving focus")
                         item.forceActiveFocus()
                     }
 
-                    Behavior on opacity { NumberAnimation { duration: 220 } }
+                    Behavior on Layout.preferredHeight { NumberAnimation { duration: 220 } }
+                    Behavior on opacity                { NumberAnimation { duration: 220 } }
                     opacity: status === Loader.Ready ? 1.0 : 0.0
                 }
             }
