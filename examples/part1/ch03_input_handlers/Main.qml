@@ -37,6 +37,7 @@ ApplicationWindow {
             GroupBox {
                 Layout.fillWidth: true
                 title: "1 · DragHandler — free drag with position readout"
+                implicitHeight: topPadding + bottomPadding + 160
 
                 // Fixed-size canvas so the draggable item stays visible.
                 Rectangle {
@@ -86,6 +87,7 @@ ApplicationWindow {
             GroupBox {
                 Layout.fillWidth: true
                 title: "2 · TapHandler — tap count + long-press"
+                implicitHeight: topPadding + bottomPadding + 130
 
                 Rectangle {
                     width: parent.width - 2
@@ -154,6 +156,7 @@ ApplicationWindow {
             GroupBox {
                 Layout.fillWidth: true
                 title: "3 · HoverHandler — cursor change + hover highlight"
+                implicitHeight: topPadding + bottomPadding + 120
 
                 Rectangle {
                     width: parent.width - 2
@@ -207,6 +210,7 @@ ApplicationWindow {
             GroupBox {
                 Layout.fillWidth: true
                 title: "4 · PinchHandler — two-finger pinch-to-scale + rotate"
+                implicitHeight: topPadding + bottomPadding + 200
 
                 Rectangle {
                     width: parent.width - 2
@@ -288,6 +292,7 @@ ApplicationWindow {
             GroupBox {
                 Layout.fillWidth: true
                 title: "5 · DraggableBox — reusable DragHandler + TapHandler component"
+                implicitHeight: topPadding + bottomPadding + 160
 
                 Rectangle {
                     width: parent.width - 2
