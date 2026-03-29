@@ -7,6 +7,12 @@
 //
 // Resize the window to see the layout adapt in real time.
 //
+// Component files in this directory:
+//   Sidebar.qml    — animated collapsible left-navigation panel
+//   TopBar.qml     — fixed-height header with title and breakpoint badge
+//   MetricCard.qml — individual metric tile (title, value, trend, subtitle)
+//   NavItem.qml    — single navigation row used by Sidebar
+//
 // Run with:
 //   qml Main.qml
 
@@ -15,7 +21,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Effects
 
 ApplicationWindow {
     id:      root
@@ -41,183 +46,14 @@ ApplicationWindow {
         ListElement { cardTitle: "Storage";      subtitle: "Used capacity";           value: "68 %";   trend: "+1%" }
     }
 
-    // ── reusable card component ───────────────────────────────────────────
-    component MetricCard: Rectangle {
-        id: card
-
-        required property string cardTitle
-        required property string subtitle
-        required property string value
-        required property string trend
-
-        readonly property bool positive: trend.startsWith("+")
-
-        radius:  10
-        color:   "#ffffff"
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled:          true
-            shadowColor:            Qt.rgba(0, 0, 0, 0.08)
-            shadowVerticalOffset:   2
-            shadowHorizontalOffset: 0
-            shadowBlur:             0.7
-        }
-
-        implicitHeight: formGrid.implicitHeight + 24
-        implicitWidth:  200
-
-        GridLayout {
-            id: formGrid
-            anchors {
-                left:    parent.left
-                right:   parent.right
-                top:     parent.top
-                margins: 16
-            }
-            columns:      2
-            columnSpacing: 8
-            rowSpacing:    4
-
-            // Row 0 — title spanning both columns
-            Text {
-                text:              card.cardTitle
-                font { pixelSize: 13; weight: Font.Medium }
-                color:             "#6b7280"
-                Layout.columnSpan: 2
-            }
-
-            // Row 1 — big value + trend badge
-            Text {
-                text:             card.value
-                font { pixelSize: 26; weight: Font.Bold }
-                color:            "#111827"
-                Layout.fillWidth: true
-            }
-
-            Rectangle {
-                radius: 4
-                color:  card.positive ? Qt.rgba(0.06, 0.73, 0.44, 0.12)
-                                      : Qt.rgba(0.94, 0.27, 0.27, 0.12)
-                implicitWidth:  trendLabel.implicitWidth  + 10
-                implicitHeight: trendLabel.implicitHeight + 6
-
-                Text {
-                    id: trendLabel
-                    anchors.centerIn: parent
-                    text:  card.trend
-                    font { pixelSize: 12; weight: Font.Medium }
-                    color: card.positive ? "#10b981" : "#ef4444"
-                }
-            }
-
-            // Row 2 — subtitle
-            Text {
-                text:              card.subtitle
-                font.pixelSize:    12
-                color:             "#9ca3af"
-                Layout.columnSpan: 2
-            }
-        }
-    }
-
-    // ── sidebar nav item ──────────────────────────────────────────────────
-    component NavItem: Rectangle {
-        id: navItem
-        required property string label
-        required property string iconChar
-        property bool  selected: false
-
-        Layout.fillWidth: true   // must fill the sidebar ColumnLayout or width is 0
-        height:  44
-        radius:   8
-        color:    selected ? Qt.rgba(0.42, 0.23, 0.93, 0.12) : "transparent"
-
-        RowLayout {
-            anchors {
-                fill:    parent
-                margins: 10
-            }
-            spacing: 10
-
-            Text {
-                text:          navItem.iconChar
-                font.pixelSize: 18
-                color:          navItem.selected ? "#6c3aec" : "#6b7280"
-            }
-            Text {
-                text:             navItem.label
-                font { pixelSize: 14; weight: navItem.selected ? Font.Medium : Font.Normal }
-                color:            navItem.selected ? "#6c3aec" : "#374151"
-                Layout.fillWidth: true
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            cursorShape:  Qt.PointingHandCursor
-            onClicked:    navItem.selected = !navItem.selected
-        }
-    }
-
     // ── root layout ───────────────────────────────────────────────────────
     RowLayout {
         anchors.fill: parent
         spacing:      0
 
         // ── Sidebar (expanded breakpoint only) ────────────────────────────
-        Rectangle {
-            id: sidebar
-
-            // Layout.preferredWidth controls the sidebar's slot in the RowLayout.
-            // Using 'width:' here would be overridden by the layout engine;
-            // preferredWidth is the correct hook for layout-managed items.
-            Layout.preferredWidth: root.isExpanded ? 220 : 0
-            Layout.fillHeight: true
-
-            color:   "#ffffff"
-            clip:    true   // hide content while animating
-
-            // Border on the right side
-            Rectangle {
-                anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
-                width: 1
-                color: "#e5e7eb"
-            }
-
-            Behavior on Layout.preferredWidth {
-                NumberAnimation { duration: 260; easing.type: Easing.OutCubic }
-            }
-
-            // Sidebar content.  clip:true on the parent Rectangle hides this
-            // progressively as the width animates to 0 — no separate opacity
-            // animation is needed.  Adding one causes the content to disappear
-            // before the slide finishes, making the sidebar briefly visible but
-            // empty as it closes.
-            ColumnLayout {
-                anchors {
-                    fill:    parent
-                    margins: 16
-                }
-                spacing: 4
-
-                // App brand
-                Text {
-                    text: "Dashboard"
-                    font { pixelSize: 18; weight: Font.Bold }
-                    color: "#111827"
-                    Layout.bottomMargin: 16
-                }
-
-                NavItem { label: "Overview";   iconChar: "◉"; selected: true }
-                NavItem { label: "Analytics";  iconChar: "📊" }
-                NavItem { label: "Users";      iconChar: "👥" }
-                NavItem { label: "Revenue";    iconChar: "💰" }
-                NavItem { label: "Settings";   iconChar: "⚙" }
-
-                Item { Layout.fillHeight: true }
-
-                NavItem { label: "Sign out";   iconChar: "⏏" }
-            }
+        Sidebar {
+            isExpanded: root.isExpanded
         }
 
         // ── Main content area ─────────────────────────────────────────────
@@ -227,56 +63,9 @@ ApplicationWindow {
             spacing:           0
 
             // Top bar
-            Rectangle {
-                Layout.fillWidth: true
-                height:           56
-                color:            "#ffffff"
-
-                Rectangle {
-                    anchors { left: parent.left; right: parent.right; bottom: parent.bottom }
-                    height: 1
-                    color:  "#e5e7eb"
-                }
-
-                RowLayout {
-                    anchors {
-                        fill:             parent
-                        leftMargin:       20
-                        rightMargin:      20
-                    }
-
-                    Text {
-                        text:  root.isCompact  ? "Dashboard"
-                             : root.isExpanded ? "Overview"
-                             :                   "Dashboard — Overview"
-                        font { pixelSize: 16; weight: Font.DemiBold }
-                        color: "#111827"
-                    }
-
-                    Item { Layout.fillWidth: true }
-
-                    // Breakpoint indicator (handy during development)
-                    Rectangle {
-                        radius: 4
-                        color:  root.isCompact  ? "#fef3c7"
-                              : root.isExpanded ? "#d1fae5"
-                              :                   "#dbeafe"
-                        implicitWidth:  bpLabel.implicitWidth  + 12
-                        implicitHeight: bpLabel.implicitHeight + 6
-
-                        Text {
-                            id: bpLabel
-                            anchors.centerIn: parent
-                            text:  root.isCompact  ? "compact"
-                                 : root.isExpanded ? "expanded"
-                                 :                   "normal"
-                            font { pixelSize: 11; weight: Font.Medium }
-                            color: root.isCompact  ? "#92400e"
-                                 : root.isExpanded ? "#065f46"
-                                 :                   "#1e40af"
-                        }
-                    }
-                }
+            TopBar {
+                isCompact:  root.isCompact
+                isExpanded: root.isExpanded
             }
 
             // Scrollable card area
@@ -289,7 +78,7 @@ ApplicationWindow {
                 Loader {
                     width: parent.width
 
-                    // Swap between a ColumnLayout (compact) and a Flow/GridLayout
+                    // Swap between a ColumnLayout (compact) and a GridLayout
                     sourceComponent: root.isCompact ? compactCards : wideCards
 
                     Behavior on opacity { NumberAnimation { duration: 160 } }
@@ -323,15 +112,15 @@ ApplicationWindow {
                     id: wideCards
 
                     GridLayout {
-                        width:        parent ? parent.width : 0
-                        columns:      root.isExpanded ? 3 : 2
+                        width:         parent ? parent.width : 0
+                        columns:       root.isExpanded ? 3 : 2
                         columnSpacing: 16
                         rowSpacing:    16
 
-                        // padding via anchors
+                        // padding via a full-span spacer row
                         Item {
                             Layout.columnSpan: root.isExpanded ? 3 : 2
-                            Layout.fillWidth: true
+                            Layout.fillWidth:  true
                             height: 16
                         }
 
@@ -342,7 +131,7 @@ ApplicationWindow {
                             // makes the Repeater inject matching model roles into those
                             // existing required properties automatically.
                             // Re-declaring them creates duplicate required properties
-                            // that the Repeater cannot satisfy, causing the delegate error.
+                            // that the Repeater cannot satisfy, causing a delegate error.
                             delegate: MetricCard {
                                 // index is a Repeater context property.  With
                                 // ComponentBehavior: Bound it must be explicitly
