@@ -38,8 +38,13 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color:        root.isHovered ? "#f5f3ff" : "transparent"
-        Behavior on color { ColorAnimation { duration: 120 } }
+        // Animate opacity, not color.  ColorAnimation interpolates RGB values,
+        // so fading from "transparent" (#00000000, black) to a coloured value
+        // passes through dark mid-points and produces a visible dark flash.
+        // Animating opacity keeps the hue constant and only changes alpha.
+        color:   "#b29dffff"
+        opacity: root.isHovered ? 1.0 : 0.0
+        Behavior on opacity { NumberAnimation { duration: 120 } }
     }
 
     // Thin bottom separator
