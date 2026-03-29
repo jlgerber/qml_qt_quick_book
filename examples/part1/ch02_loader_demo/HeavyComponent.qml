@@ -11,8 +11,8 @@ Rectangle {
     // Caller supplies the number of items to "build".
     required property int itemCount
 
-    width: 420
-    height: 180
+    implicitWidth: 420
+    implicitHeight: 180
     color: "#2d3436"
     radius: 8
     border.color: "#00b894"

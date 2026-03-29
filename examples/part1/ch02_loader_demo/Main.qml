@@ -37,8 +37,11 @@ ApplicationWindow {
             Layout.fillWidth: true
             title: "1 · Loader.active — show / hide on demand"
 
-            ColumnLayout {
-                anchors.fill: parent
+            // Make the ColumnLayout the GroupBox's contentItem so that
+            // GroupBox.implicitHeight tracks contentItem.implicitHeight, which
+            // in turn tracks the Loader's implicitHeight (and therefore the
+            // loaded item's implicitHeight).
+            contentItem: ColumnLayout {
                 spacing: 10
 
                 RowLayout {
@@ -83,8 +86,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             title: "2 · Loader.asynchronous — non-blocking load with BusyIndicator"
 
-            ColumnLayout {
-                anchors.fill: parent
+            contentItem: ColumnLayout {
                 spacing: 10
 
                 RowLayout {
@@ -128,11 +130,11 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     active: false
                     asynchronous: true
-                    source: active ? "HeavyComponent.qml" : ""
-
-                    // Pass initial properties for the required property.
-                    // NOTE: for asynchronous loaders use the Binding + item pattern
-                    // or setSource().  Here we use setSource via onActiveChanged.
+                    // NOTE: do NOT also set 'source' here — setSource() below
+                    // supplies the required 'itemCount' property atomically.
+                    // Having both 'source' and setSource() races: the 'source'
+                    // binding fires first without the required property, causing
+                    // a Status:Error before setSource() can correct it.
                     onActiveChanged: {
                         if (active) {
                             setSource("HeavyComponent.qml", { itemCount: 250 })

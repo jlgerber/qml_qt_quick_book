@@ -11,8 +11,8 @@ Rectangle {
     // Caller must supply this; Loader will pass it as an initial property.
     required property string title
 
-    width: 400
-    height: 140
+    implicitWidth: 400
+    implicitHeight: 140
     color: "#1e272e"
     radius: 8
     border.color: "#3daee9"
