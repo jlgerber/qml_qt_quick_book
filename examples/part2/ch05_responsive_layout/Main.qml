@@ -10,9 +10,12 @@
 // Run with:
 //   qml Main.qml
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Effects
 
 ApplicationWindow {
     id:      root
@@ -51,38 +54,13 @@ ApplicationWindow {
 
         radius:  10
         color:   "#ffffff"
-        // Elevation shadow — Qt version compatibility note:
-        //
-        // Current implementation uses a plain offset Rectangle (works on all
-        // Qt 6 versions, no extra imports required).
-        //
-        // To upgrade to a true blurred shadow on Qt ≥ 6.5, remove the
-        // Rectangle below and replace it with:
-        //
-        //   layer.enabled: true
-        //   layer.effect: MultiEffect {
-        //       shadowEnabled:          true
-        //       shadowColor:            Qt.rgba(0, 0, 0, 0.08)
-        //       shadowVerticalOffset:   2
-        //       shadowHorizontalOffset: 0
-        //       shadowBlur:             0.7
-        //   }
-        //
-        // On Qt 6.3–6.4, import Qt5Compat.GraphicalEffects and use:
-        //   layer.enabled: true
-        //   layer.effect: DropShadow {
-        //       color:          Qt.rgba(0, 0, 0, 0.08)
-        //       verticalOffset: 2
-        //       radius:         8
-        //       samples:        17
-        //   }
-        Rectangle {
-            anchors.fill: parent
-            anchors.margins: -2
-            z: -1
-            radius: parent.radius + 2
-            color: Qt.rgba(0, 0, 0, 0.08)
-            transform: Translate { y: 2 }
+        layer.enabled: true
+        layer.effect: MultiEffect {
+            shadowEnabled:          true
+            shadowColor:            Qt.rgba(0, 0, 0, 0.08)
+            shadowVerticalOffset:   2
+            shadowHorizontalOffset: 0
+            shadowBlur:             0.7
         }
 
         implicitHeight: formGrid.implicitHeight + 24
@@ -207,18 +185,17 @@ ApplicationWindow {
                 NumberAnimation { duration: 260; easing.type: Easing.OutCubic }
             }
 
-            // Sidebar content (only rendered when wide enough to matter)
+            // Sidebar content.  clip:true on the parent Rectangle hides this
+            // progressively as the width animates to 0 — no separate opacity
+            // animation is needed.  Adding one causes the content to disappear
+            // before the slide finishes, making the sidebar briefly visible but
+            // empty as it closes.
             ColumnLayout {
                 anchors {
                     fill:    parent
                     margins: 16
                 }
                 spacing: 4
-                opacity: root.isExpanded ? 1 : 0
-
-                Behavior on opacity {
-                    NumberAnimation { duration: 200 }
-                }
 
                 // App brand
                 Text {
@@ -269,7 +246,7 @@ ApplicationWindow {
                         text:  root.isCompact  ? "Dashboard"
                              : root.isExpanded ? "Overview"
                              :                   "Dashboard — Overview"
-                        font { pixelSize: 16; weight: Font.SemiBold }
+                        font { pixelSize: 16; weight: Font.DemiBold }
                         color: "#111827"
                     }
 
@@ -333,7 +310,7 @@ ApplicationWindow {
                                 required property string value
                                 required property string trend
 
-                                Layout.fillWidth: true
+                                Layout.fillWidth:  true
                                 Layout.leftMargin:  16
                                 Layout.rightMargin: 16
                             }
@@ -368,7 +345,7 @@ ApplicationWindow {
                                 required property string value
                                 required property string trend
 
-                                Layout.fillWidth:  true
+                                Layout.fillWidth:   true
                                 Layout.leftMargin:  index % (root.isExpanded ? 3 : 2) === 0 ? 20 : 0
                                 Layout.rightMargin: (index + 1) % (root.isExpanded ? 3 : 2) === 0 ? 20 : 0
                             }

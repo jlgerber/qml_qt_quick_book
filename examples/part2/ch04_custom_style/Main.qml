@@ -5,6 +5,8 @@
 // The -I . flag adds the current directory to the QML import path so that
 // the MyStyle module (./MyStyle/qmldir) is found.
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts

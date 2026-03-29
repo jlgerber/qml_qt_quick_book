@@ -6,6 +6,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Effects
 
 Item {
     id: screen
@@ -68,37 +69,12 @@ Item {
                     radius:            14
                     color:             "#ffffff"
 
-                    // Elevation shadow — Qt version compatibility note:
-                    //
-                    // Current implementation uses a plain offset Rectangle
-                    // (works on all Qt 6 versions, no extra imports required).
-                    //
-                    // To upgrade to a true blurred shadow on Qt ≥ 6.5, remove
-                    // the Rectangle below and replace it with:
-                    //
-                    //   layer.enabled: true
-                    //   layer.effect: MultiEffect {
-                    //       shadowEnabled:        true
-                    //       shadowColor:          Qt.rgba(0, 0, 0, 0.08)
-                    //       shadowVerticalOffset: 3
-                    //       shadowBlur:           0.7
-                    //   }
-                    //
-                    // On Qt 6.3–6.4, import Qt5Compat.GraphicalEffects and use:
-                    //   layer.enabled: true
-                    //   layer.effect: DropShadow {
-                    //       color:          Qt.rgba(0, 0, 0, 0.08)
-                    //       verticalOffset: 3
-                    //       radius:         10
-                    //       samples:        21
-                    //   }
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.margins: -2
-                        z: -1
-                        radius: parent.radius + 2
-                        color: Qt.rgba(0, 0, 0, 0.08)
-                        transform: Translate { y: 3 }
+                    layer.enabled: true
+                    layer.effect: MultiEffect {
+                        shadowEnabled:        true
+                        shadowColor:          Qt.rgba(0, 0, 0, 0.08)
+                        shadowVerticalOffset: 3
+                        shadowBlur:           0.7
                     }
 
                     // Press / hover tint
@@ -138,7 +114,7 @@ Item {
 
                         Text {
                             text:             modelData.title
-                            font { pixelSize: 16; weight: Font.SemiBold }
+                            font { pixelSize: 16; weight: Font.DemiBold }
                             color:            "#1a1a2e"
                             Layout.fillWidth: true
                         }
