@@ -41,7 +41,10 @@ Rectangle {
             Layout.preferredWidth:  20
             Layout.preferredHeight: 20
             Layout.fillWidth:   !navItem.showLabel
-            fillMode:           Image.Pad
+            // PreserveAspectFit scales the SVG to fit within the item bounds.
+            // Image.Pad renders at the raw sourceSize (40 px) regardless of the
+            // item size, causing the icon to overflow its 20 px layout slot.
+            fillMode:            Image.PreserveAspectFit
             horizontalAlignment: Image.AlignHCenter
             sourceSize:         Qt.size(40, 40)
 
