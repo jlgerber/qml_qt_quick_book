@@ -13,10 +13,19 @@ Item {
     id: screen
 
     // ── Required properties (injected by StackView.push) ─────────────────
+    required property url       icon
     required property string    title
-    required property string    icon
     required property string    accentColor
     required property QtObject  navigationController
+
+    // SVG icons for the placeholder list rows — resolved relative to this file.
+    readonly property var itemIcons: [
+        Qt.resolvedUrl("icons/pin.svg"),
+        Qt.resolvedUrl("icons/paperclip.svg"),
+        Qt.resolvedUrl("icons/bell.svg"),
+        Qt.resolvedUrl("icons/folder.svg"),
+        Qt.resolvedUrl("icons/link.svg")
+    ]
 
     Rectangle {
         anchors.fill: parent
@@ -105,24 +114,21 @@ Item {
 
             gradient: Gradient {
                 orientation: Gradient.Horizontal
-                GradientStop {
-                    position: 0.0
-                    color: Qt.darker(screen.accentColor, 1.1)
-                }
-                GradientStop {
-                    position: 1.0
-                    color: Qt.lighter(screen.accentColor, 1.4)
-                }
+                GradientStop { position: 0.0; color: Qt.darker(screen.accentColor,  1.1) }
+                GradientStop { position: 1.0; color: Qt.lighter(screen.accentColor, 1.4) }
             }
 
             ColumnLayout {
                 anchors.centerIn: parent
                 spacing:          8
 
-                Text {
+                Image {
                     Layout.alignment: Qt.AlignHCenter
-                    text:  screen.icon
-                    font.pixelSize: 52
+                    width:      56
+                    height:     56
+                    sourceSize: Qt.size(112, 112)
+                    source:     screen.icon
+                    fillMode:   Image.PreserveAspectFit
                 }
 
                 Text {
@@ -174,6 +180,7 @@ Item {
                             }
                             spacing: 12
 
+                            // Icon badge — tinted background, white SVG icon
                             Rectangle {
                                 width:  40
                                 height: 40
@@ -182,12 +189,15 @@ Item {
                                             Qt.color(screen.accentColor).r,
                                             Qt.color(screen.accentColor).g,
                                             Qt.color(screen.accentColor).b,
-                                            0.12)
+                                            0.25)
 
-                                Text {
+                                Image {
                                     anchors.centerIn: parent
-                                    text:  ["📌","📎","🔔","📁","🔗"][index]
-                                    font.pixelSize: 18
+                                    width:      20
+                                    height:     20
+                                    sourceSize: Qt.size(40, 40)
+                                    source:     screen.itemIcons[index]
+                                    fillMode:   Image.PreserveAspectFit
                                 }
                             }
 

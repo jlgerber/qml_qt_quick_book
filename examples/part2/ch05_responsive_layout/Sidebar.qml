@@ -60,14 +60,14 @@ Rectangle {
             visible:             sidebar.isExpanded
         }
 
-        NavItem { label: "Overview";  iconChar: "◉"; selected: true; showLabel: sidebar.isExpanded }
-        NavItem { label: "Analytics"; iconChar: "📊";                 showLabel: sidebar.isExpanded }
-        NavItem { label: "Users";     iconChar: "👥";                 showLabel: sidebar.isExpanded }
-        NavItem { label: "Revenue";   iconChar: "💰";                 showLabel: sidebar.isExpanded }
-        NavItem { label: "Settings";  iconChar: "⚙";                  showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/overview.svg");  label: "Overview";  selected: true; showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/analytics.svg"); label: "Analytics";               showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/users.svg");     label: "Users";                   showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/revenue.svg");   label: "Revenue";                 showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/settings.svg");  label: "Settings";                showLabel: sidebar.isExpanded }
 
         Item { Layout.fillHeight: true }
 
-        NavItem { label: "Sign out";  iconChar: "⏏";                  showLabel: sidebar.isExpanded }
+        NavItem { iconSource: Qt.resolvedUrl("icons/signout.svg");   label: "Sign out";                showLabel: sidebar.isExpanded }
     }
 }

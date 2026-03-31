@@ -15,11 +15,14 @@ Item {
     required property QtObject navigationController
 
     // ── App card data ─────────────────────────────────────────────────────
+    // Qt.resolvedUrl converts the relative path to an absolute file:// URL
+    // at component-creation time so the resolved path travels correctly
+    // when the icon is forwarded to DetailScreen via the navigation call.
     readonly property var apps: [
-        { title: "Contacts",   icon: "👥", color: "#6c3aec", desc: "Manage your address book" },
-        { title: "Calendar",   icon: "📅", color: "#0ea5e9", desc: "Events & reminders"       },
-        { title: "Analytics",  icon: "📊", color: "#10b981", desc: "Usage statistics"         },
-        { title: "Settings",   icon: "⚙",  color: "#f59e0b", desc: "App preferences"          }
+        { title: "Contacts",  icon: Qt.resolvedUrl("icons/contacts.svg"),  color: "#6c3aec", desc: "Manage your address book" },
+        { title: "Calendar",  icon: Qt.resolvedUrl("icons/calendar.svg"),  color: "#0ea5e9", desc: "Events & reminders"       },
+        { title: "Analytics", icon: Qt.resolvedUrl("icons/analytics.svg"), color: "#10b981", desc: "Usage statistics"         },
+        { title: "Settings",  icon: Qt.resolvedUrl("icons/settings.svg"),  color: "#f59e0b", desc: "App preferences"          }
     ]
 
     // ── Background ────────────────────────────────────────────────────────
@@ -94,26 +97,20 @@ Item {
                         }
                         spacing: 10
 
-                        // Icon badge
+                        // Icon badge — solid accent-colour background, white SVG icon
                         Rectangle {
                             width:  52
                             height: 52
                             radius: 14
-                            color:  Qt.rgba(
-                                        Qt.color(modelData.color).r,
-                                        Qt.color(modelData.color).g,
-                                        Qt.color(modelData.color).b,
-                                        0.15)
+                            color:  modelData.color
 
-                            Text {
+                            Image {
                                 anchors.centerIn: parent
-                                text:  modelData.icon
-                                font.pixelSize: 26
-                                // Fontconfig on this system routes some emoji
-                                // (e.g. 👥 📅) to NotoEmoji Nerd Font Mono whose
-                                // glyphs render invisibly at this size.  Pinning
-                                // to Noto Color Emoji ensures consistent rendering.
-                                font.family: "Noto Color Emoji"
+                                width:       28
+                                height:      28
+                                sourceSize:  Qt.size(56, 56)
+                                source:      modelData.icon
+                                fillMode:    Image.PreserveAspectFit
                             }
                         }
 

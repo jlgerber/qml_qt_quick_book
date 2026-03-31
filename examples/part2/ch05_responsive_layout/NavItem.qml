@@ -1,16 +1,21 @@
 // NavItem.qml — single row in the sidebar navigation.
-// Displays an icon glyph and a text label; toggles selected on click.
+// Displays an SVG icon and a text label; toggles selected on click.
+//
+// The icon is a white SVG rendered via Image.  MultiEffect colorization
+// tints it to the accent colour (selected) or grey (unselected) at runtime,
+// which avoids font-fallback issues that plague emoji-based icons on Linux.
 
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 
 Rectangle {
     id: navItem
 
+    required property url    iconSource
     required property string label
-    required property string iconChar
-    property bool selected:   false
-    property bool showLabel:  true
+    property bool selected:  false
+    property bool showLabel: true
 
     // Always fill the parent ColumnLayout horizontally; without this the
     // Rectangle's implicit width is 0 and the row collapses to nothing.
@@ -28,13 +33,25 @@ Rectangle {
         }
         spacing: 10
 
-        Text {
-            text:                navItem.iconChar
-            font.pixelSize:      18
-            color:               navItem.selected ? "#6c3aec" : "#6b7280"
-            Layout.fillWidth:    !navItem.showLabel
-            horizontalAlignment: Text.AlignHCenter
+        // SVG icon — colorized to accent or grey based on selection state.
+        // Layout.fillWidth + Image.Pad + AlignHCenter centres the glyph
+        // horizontally when the label is hidden (icon-only sidebar mode).
+        Image {
+            source:             navItem.iconSource
+            Layout.preferredWidth:  20
+            Layout.preferredHeight: 20
+            Layout.fillWidth:   !navItem.showLabel
+            fillMode:           Image.Pad
+            horizontalAlignment: Image.AlignHCenter
+            sourceSize:         Qt.size(40, 40)
+
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                colorization:      1.0
+                colorizationColor: navItem.selected ? "#6c3aec" : "#6b7280"
+            }
         }
+
         Text {
             text:             navItem.label
             font { pixelSize: 14; weight: navItem.selected ? Font.Medium : Font.Normal }

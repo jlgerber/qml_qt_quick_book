@@ -14,7 +14,7 @@ import sys
 import PySide6
 from PySide6.QtCore import QObject, Property, qVersion
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QQmlApplicationEngine, QML_IMPORT_NAME, QmlElement
+from PySide6.QtQml import QQmlApplicationEngine, QmlElement
 
 # ---------------------------------------------------------------------------
 # QML module registration
