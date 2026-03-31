@@ -140,7 +140,7 @@ ApplicationWindow {
                 anchors.centerIn: parent
                 visible: resultsList.count === 0 && !root.vm.searching
                 text: root.vm.query.length > 0
-                      ? "No results for "" + root.vm.query + """
+                      ? "No results for \"" + root.vm.query + "\""
                       : "Enter a search term above."
                 horizontalAlignment: Text.AlignHCenter
                 color: "#888"

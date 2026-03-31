@@ -39,35 +39,39 @@ ApplicationWindow {
                 padding: 0
 
                 // Main content
-                contentItem: ColumnLayout {
-                    spacing: 2
-                    anchors {
-                        left: parent.left
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
-                        leftMargin: 16
-                        rightMargin: 16
-                    }
+                contentItem: Item {
+                    implicitHeight: contactCol.implicitHeight + 20
+                    ColumnLayout {
+                        id: contactCol
+                        spacing: 2
+                        anchors {
+                            left: parent.left
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            leftMargin: 16
+                            rightMargin: 16
+                        }
 
-                    Label {
-                        text: model.name
-                        font.bold: true
-                        font.pixelSize: 15
-                        elide: Text.ElideRight
-                        Layout.fillWidth: true
-                    }
-                    Label {
-                        text: model.email
-                        font.pixelSize: 12
-                        color: "#555"
-                        elide: Text.ElideRight
-                        Layout.fillWidth: true
-                    }
-                    Label {
-                        text: model.phone
-                        font.pixelSize: 12
-                        color: "#555"
-                        Layout.fillWidth: true
+                        Label {
+                            text: model.name
+                            font.bold: true
+                            font.pixelSize: 15
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                        Label {
+                            text: model.email
+                            font.pixelSize: 12
+                            color: "#555"
+                            elide: Text.ElideRight
+                            Layout.fillWidth: true
+                        }
+                        Label {
+                            text: model.phone
+                            font.pixelSize: 12
+                            color: "#555"
+                            Layout.fillWidth: true
+                        }
                     }
                 }
 
@@ -110,13 +114,21 @@ ApplicationWindow {
         // ----------------------------------------------------------------
         // Add-contact form
         // ----------------------------------------------------------------
-        Pane {
+        Rectangle {
             Layout.fillWidth: true
-            padding: 12
-            background: Rectangle { color: "#f5f5f5"; border.color: "#ddd"; border.width: 1 }
+            implicitHeight: formLayout.implicitHeight + 24
+            color: "#555555"
+            border.color: "#ddd"
+            border.width: 1
 
             ColumnLayout {
-                anchors.fill: parent
+                id: formLayout
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    margins: 12
+                }
                 spacing: 8
 
                 Label {
