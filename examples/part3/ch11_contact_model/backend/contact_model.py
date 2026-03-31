@@ -15,7 +15,7 @@ from PySide6.QtCore import (
     Qt,
     Slot,
 )
-from PySide6.QtQml import QML_IMPORT_NAME, QmlElement
+from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "com.example.contacts"
 QML_IMPORT_MAJOR_VERSION = 1

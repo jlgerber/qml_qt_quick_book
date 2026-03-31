@@ -42,7 +42,7 @@ import sys
 import PySide6
 from PySide6.QtCore import QObject, Property, qVersion
 from PySide6.QtGui import QGuiApplication
-from PySide6.QtQml import QML_IMPORT_NAME, QmlElement
+from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "com.example.deploy"
 QML_IMPORT_MAJOR_VERSION = 1

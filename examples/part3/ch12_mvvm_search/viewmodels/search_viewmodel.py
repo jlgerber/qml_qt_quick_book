@@ -21,7 +21,7 @@ from PySide6.QtCore import (
     Slot,
     Qt,
 )
-from PySide6.QtQml import QML_IMPORT_NAME, QmlElement
+from PySide6.QtQml import QmlElement
 
 from services.search_service import SearchResult, SearchService
 

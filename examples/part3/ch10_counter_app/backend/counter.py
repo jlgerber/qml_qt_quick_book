@@ -12,7 +12,7 @@ Demonstrates:
 from __future__ import annotations
 
 from PySide6.QtCore import QObject, Property, Signal, Slot
-from PySide6.QtQml import QML_IMPORT_NAME, QmlElement
+from PySide6.QtQml import QmlElement
 
 QML_IMPORT_NAME = "com.example.counter"
 QML_IMPORT_MAJOR_VERSION = 1
