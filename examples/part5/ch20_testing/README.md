@@ -1,15 +1,17 @@
-# Chapter 20 — Testing Qt Quick and C++ Models
+# Chapter 20 — Testing Qt Quick, C++ Models, and PySide6
 
-Two independent test suites that cover the two main testing surfaces in a
+Three independent test suites that cover the main testing surfaces in a
 Qt application:
 
 - **QML behavioural tests** — using `TestCase` and `SignalSpy` from
   `QtTest` (no C++ required).
 - **C++ model unit tests** — using `QTest`, `QSignalSpy`, and
   `QAbstractItemModelTester`.
+- **Python / PySide6 unit tests** — using `pytest` and `pytest-qt`.
 
-Both suites are self-contained: the types under test are defined inline so
-the examples build and run without any external dependencies beyond Qt itself.
+All three suites are self-contained: the types under test are defined inside
+the test files so the examples run without external dependencies beyond Qt
+and the standard Python toolchain.
 
 ---
 
@@ -102,6 +104,51 @@ cmake --build build
 
 # Or via CTest (shows pass/fail summary)
 ctest --test-dir build --output-on-failure
+```
+
+---
+
+## python_tests/
+
+### What it tests
+
+The same `TaskModel` logic as the C++ suite, re-implemented as a PySide6
+`QAbstractListModel` in `task_model.py`.
+
+| Role / method | Description |
+|---------------|-------------|
+| `IdRole` | UUID string — `"taskId"` role name |
+| `TitleRole` | Task title string |
+| `DoneRole` | bool completion flag |
+| `addTask(title)` | Appends a new task; returns its UUID string |
+| `removeTask(id)` | Removes by UUID; returns `True` if found |
+| `setDone(id, done)` | Sets done flag, emits `dataChanged`; returns `True` if found |
+
+### Test cases
+
+| Test | What it checks |
+|------|----------------|
+| `test_initially_empty` | `rowCount()` is 0 after construction |
+| `test_add_task` | Row count and role data correct after insert |
+| `test_add_multiple_tasks` | Insertion order preserved across multiple adds |
+| `test_remove_task` | Row count and remaining data correct after remove; `False` for unknown id |
+| `test_set_done` | `done` role toggles correctly |
+| `test_set_done_unknown_id_returns_false` | Unknown id leaves model unchanged |
+| `test_add_task_rows_inserted_signal` | `qtbot.waitSignal` captures correct first/last indices |
+| `test_remove_task_rows_removed_signal` | `rowsRemoved` carries correct indices |
+| `test_data_changed_emits_done_role` | Only `DoneRole` present in the changed-roles list |
+| `test_model_integrity` | `QAbstractItemModelTester` monitors all mutations for invariant violations |
+
+### How to run
+
+```bash
+cd examples/part5/ch20_testing/python_tests
+
+# Install dependencies (once)
+pip install pytest pytest-qt
+
+# Run all tests
+pytest -v
 ```
 
 ---
