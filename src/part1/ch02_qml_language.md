@@ -1,5 +1,307 @@
 # Chapter 2: QML Language Deep Dive
 
+## QML Elements and the Object Hierarchy
+
+### The Object Hierarchy: A Structured Approach to UI
+
+QML applications are built around an **object hierarchy** — a tree of elements nested within one another, forming a parent-child structure. This hierarchy is both:
+
+- **Visual**: it defines what you see on screen — how elements are positioned relative to one another and which elements contain which others.
+- **Logical**: it defines the ownership and lifetime of objects — when a parent is destroyed, its children are automatically destroyed; when you interact with an element, you navigate up or down the tree to access related elements.
+
+At the top of the hierarchy is typically an `ApplicationWindow` or a `Window`. Nested inside are containers (like `Column`, `Row`, `Rectangle`) and interactive elements (like `Button`, `TextField`, `Text`). Each nested level corresponds to one level of the QML file's indentation, making the hierarchy immediately visible in the source code.
+
+This structural approach is one of QML's core strengths: the UI's organization is explicit and easy to reason about. Properties and signals flow through this hierarchy, and the hierarchy itself determines visual stacking order, input delivery, and resource cleanup.
+
+### What is a QML Element?
+
+A QML element is an object instantiated from a type and described declaratively. Elements are the building blocks of every Qt Quick application — they are concrete: when you write `Rectangle { color: "red" }`, you are creating a `Rectangle` element that actually exists at runtime.
+
+Elements form a tree: a parent element can contain child elements, and children are positioned relative to their parent's coordinate system. When a parent is destroyed, its children are automatically destroyed too. This ownership model eliminates manual memory management.
+
+```qml
+ApplicationWindow {
+    visible: true
+    width: 400; height: 300
+
+    Column {
+        anchors.fill: parent
+        spacing: 10
+
+        Text {
+            text: "Hello, QML"
+        }
+
+        Rectangle {
+            width: 100; height: 50
+            color: "steelblue"
+        }
+    }
+}
+```
+
+Here, `ApplicationWindow` contains a `Column`, which contains a `Text` and a `Rectangle`. When the window is destroyed, so are all its descendants.
+
+### `Item`: The Root of the Visual Hierarchy
+
+Every visual element in Qt Quick — `Rectangle`, `Text`, `Image`, `Button`, and so on — is either `Item` itself or a subclass of it. `Item` is invisible: it renders nothing. Its role is to:
+
+- **Define a rectangular region** with position (`x`, `y`) and size (`width`, `height`)
+- **Provide a coordinate origin** for child elements
+- **Carry common visual properties**: `visible`, `opacity`, `z`, `enabled`, `clip`, `scale`, `rotation`
+- **Be a container** — any element can have children
+
+```qml
+Item {
+    width: 200; height: 200
+
+    // This Rectangle is positioned at (10, 10) in Item's coordinate space
+    Rectangle {
+        x: 10; y: 10
+        width: 50; height: 50
+        color: "red"
+    }
+}
+```
+
+When you need a container that does not draw anything and simply holds other elements, use `Item`. Chapter 3 covers geometry, anchoring, and the coordinate system in depth.
+
+#### Item's Properties
+
+`Item` provides a rich set of properties that all visual elements inherit:
+
+##### Geometry and Positioning
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `x`, `y` | `real` | Position relative to the parent's top-left corner (in logical pixels) |
+| `width`, `height` | `real` | Item dimensions (in logical pixels) |
+| `implicitWidth`, `implicitHeight` | `real` | Suggested size based on the item's content (often set by layout systems) |
+| `anchors` | `Anchors` | Declarative positioning constraints relative to sibling or parent edges |
+| `transform` | `list<Transform>` | Custom 2D/3D transformations (rotation, scale, matrix) |
+
+##### Visual Appearance
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `visible` | `bool` | If `false`, the item and all children are hidden (but still exist and consume memory) |
+| `opacity` | `real` | Transparency: `0.0` (fully transparent) to `1.0` (fully opaque); inherited by children |
+| `z` | `real` | Stacking order among siblings; higher `z` appears on top |
+| `scale` | `real` | Multiplier for item size; `1.0` is normal, `2.0` is twice as large |
+| `rotation` | `real` | Rotation in degrees (clockwise); pivot is the item's center |
+| `clip` | `bool` | If `true`, children and content outside the item's boundaries are not rendered |
+
+##### Interaction and State
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `enabled` | `bool` | If `false`, the item does not receive input events (mouse, keyboard, touch); usually rendered with reduced opacity by controls |
+| `focus` | `bool` | If `true`, the item has keyboard focus and receives key events; only one item in the window has focus at a time |
+| `activeFocus` | `bool` | Read-only; `true` if this item has focus and is currently active (in focus chain) |
+| `hoverEnabled` | `bool` | Enables the `HoverHandler` behavior; if `true`, the item can track mouse hover (MouseArea property only) |
+
+##### Hierarchy and Structure
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `parent` | `Item` | The containing item, or `null` if this is a root item |
+| `children` | `list<Item>` | Array of direct child items |
+| `childrenRect` | `Rect` | Bounding rectangle of all children (useful for auto-sizing containers) |
+
+##### Signals Provided by Item
+
+`Item` also emits several signals:
+
+| Signal | Purpose |
+| --- | --- |
+| `parentChanged()` | Emitted when the parent is reassigned |
+| `childrenChanged()` | Emitted when children are added or removed |
+| `visibleChanged()` | Emitted when `visible` is toggled |
+| `focusChanged()` | Emitted when `focus` is gained or lost |
+| `activeFocusChanged()` | Emitted when `activeFocus` changes |
+
+Example: responding to visibility changes:
+
+```qml
+Item {
+    onVisibleChanged: {
+        if (visible) {
+            console.log("Item became visible")
+        } else {
+            console.log("Item became hidden")
+        }
+    }
+}
+```
+
+Most of these properties have corresponding *change signals* — for instance, `opacityChanged()` is emitted when `opacity` is modified — allowing you to react to property changes via signal handlers or bindings.
+
+### Core Built-in Elements
+
+Qt Quick provides a set of built-in visual elements — all inheriting from `Item` — for common UI tasks:
+
+| Element | Module | Purpose |
+| --- | --- | --- |
+| `Rectangle` | `QtQuick` | Filled and/or bordered box with optional rounded corners |
+| `Text` | `QtQuick` | Renders text using the system font engine |
+| `Image` | `QtQuick` | Loads and displays raster (PNG, JPEG) or vector (SVG) images |
+| `MouseArea` | `QtQuick` | Input region for mouse clicks, hover, and drag events |
+| `Flickable` | `QtQuick` | Scrollable container with flick/momentum scrolling |
+| `ListView` | `QtQuick` | Efficient list display, data-driven from a model |
+| `GridView` | `QtQuick` | Grid layout, data-driven |
+| `Repeater` | `QtQuick` | Creates multiple instances of a delegate for each model item |
+| `Loader` | `QtQuick` | Defers loading and instantiation of a child component |
+| `ApplicationWindow` | `QtQuick.Controls` | Top-level window with menu bar, tool bar, and status bar slots |
+| `Button`, `TextField`, `CheckBox`, `Slider`, … | `QtQuick.Controls` | Styled interactive controls with platform conventions |
+
+These form the vocabulary of UI construction. Each element has properties you can bind to, signals you can connect to, and behavior you can configure.
+
+### Non-Visual Elements
+
+Not all QML types are visual elements that inherit from `Item`. Qt Quick also provides utility and infrastructure objects that do not appear on screen but support the UI:
+
+| Element | Module | Purpose |
+| --- | --- | --- |
+| `Component` | `QtQuick` | Wraps a subtree without instantiating it; acts as a reusable template |
+| `Timer` | `QtQuick` | Fires a signal at regular intervals; useful for animations and periodic tasks |
+| `Connections` | `QtQuick` | Connects to signals from other objects, often used when the target is not the parent |
+| `QtObject` | `QtQml` | Base QObject without visual properties; useful for defining property-only containers |
+| `Binding` | `QtQml` | Creates an explicit binding relationship; useful for restoring bindings programmatically |
+
+These objects are instantiated like any other element and can own children or emit signals, but they do not participate in the visual tree and have no geometry, visibility, or rendering.
+
+### `Component`: Defining Without Instantiating
+
+`Component` wraps a QML subtree without creating it immediately. It acts as a reusable template:
+
+```qml
+Component {
+    id: delegateTemplate
+    Rectangle {
+        width: 100; height: 30
+        color: "lightgray"
+        Text {
+            anchors.centerIn: parent
+            text: modelData
+        }
+    }
+}
+
+// Later: instantiate the component
+Loader {
+    sourceComponent: delegateTemplate
+}
+
+ListView {
+    delegate: delegateTemplate
+}
+```
+
+The component is not instantiated when the `Component` is created — only when you ask for it via `Loader`, `ListView.delegate`, `Repeater`, or by calling `createObject()` on the component reference. This allows deferred loading and reuse of the same template.
+
+#### Best Practices: `.qml` Files vs. Inline `Component`
+
+**Use inline `Component` (inside a `.qml` file) for one-off templates:**
+
+- `ListView` delegates, `GridView` delegates, `Repeater` children
+- Templates you only use in one place
+- When you need to defer instantiation of a subtree
+
+**Use `.qml` files for reusable custom types:**
+
+The `.qml` file itself **is a component** — you don't need to wrap it in `Component`. When you create `MyButton.qml`, the file IS the template:
+
+```qml
+// MyButton.qml (correct)
+Rectangle {
+    property string label: "Click me"
+    signal clicked()
+    // ...
+}
+
+// Caller — instantiate directly
+MyButton {
+    label: "Greet"
+    onClicked: doSomething()
+}
+```
+
+**Don't make the root of a `.qml` file a `Component`:**
+
+```qml
+// MyButton.qml (incorrect — don't do this)
+Component {
+    Rectangle {
+        property string label: "Click me"
+        // ...
+    }
+}
+```
+
+This forces callers to write awkward code and defeats the purpose of `.qml` files as reusable types. The file itself is already the template.
+
+**Summary:** Use `.qml` files for anything you want to reuse in multiple places or as a named type. Use inline `Component` for templates you define and use within a single file.
+
+### Inheritance and Type Extension
+
+Every `.qml` file you create defines a new QML type. The type's name is the filename (minus `.qml`). The type extends whatever element appears at the root of the file.
+
+```qml
+// MyButton.qml
+Rectangle {
+    id: root
+    width: 100
+    height: 40
+    color: "steelblue"
+    radius: 6
+
+    property string label: "Click me"
+    signal clicked()
+
+    Text {
+        anchors.centerIn: parent
+        text: root.label
+        color: "white"
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: root.clicked()
+    }
+}
+```
+
+Now `MyButton` is a reusable type that extends `Rectangle`. Callers can use it like any built-in element:
+
+```qml
+// MainWindow.qml
+ApplicationWindow {
+    MyButton {
+        x: 20; y: 20
+        label: "Greet"
+        onClicked: console.log("Greeted!")
+    }
+}
+```
+
+The caller can set properties inherited from `Rectangle` (`x`, `y`, `width`, `height`, `color`, `radius`) as well as properties you added (`label`). They can also connect to signals you declared (`clicked`).
+
+Each `.qml` file has its own **scope**: the `id` `root` inside `MyButton.qml` refers only to the root `Rectangle` in that file. If the caller has a separate `id root` in `MainWindow.qml`, they are entirely separate — no naming conflicts.
+
+### The Element Tree at Runtime
+
+At any time, an element has:
+
+- **`parent`**: a reference to its containing element, or `null` if it has no parent
+- **`children`**: an array of all direct child elements
+- **`width`, `height`**: the element's size in logical pixels
+
+When you add a child element to an element, the parent takes ownership. When the parent is deleted (destroyed), all its children are deleted too. This automatic cleanup prevents memory leaks and makes reasoning about lifetime straightforward.
+
+The element tree is also the **visual tree**: rendering walks this tree from root to leaves, drawing each element (or delegating to a scene graph node) in order.
+
+---
+
 ## Type System, Property Bindings, and the Binding Engine
 
 ### The QML Type System
@@ -40,6 +342,100 @@ Item {
 ```
 
 Properties can have default values (the expression after the colon). That expression is itself a binding if it references other properties.
+
+#### Modifiers: `readonly` and `required`
+
+**`readonly` properties** are read-only from outside — they can only be assigned within the component that declares them:
+
+```qml
+Item {
+    readonly property int itemCount: model.length
+    readonly property bool isValid: title.length > 0 && age >= 0
+    
+    // These can be reassigned inside handlers / onCompleted
+    Component.onCompleted: {
+        // If itemCount were not readonly, this is where you'd re-assign it
+        console.log("Count:", itemCount)
+    }
+}
+```
+
+Use `readonly` when:
+
+- A property is **computed** (derived from other properties) and should not be reassigned from outside.
+- You want to **prevent accidental mutation** from parent components or external code.
+- A property's value is **managed internally** but should be readable to others (e.g., `isLoading`, `currentIndex`).
+
+The binding on a `readonly` property is active and will update as its dependencies change — the only restriction is that external code cannot assign a new value.
+
+**`required` properties** are the inverse: they **must be supplied** by the caller before the component can be used. The component will not instantiate without them:
+
+```qml
+// ProfileCard.qml
+Item {
+    required property string userId
+    required property string displayName
+    required property color highlightColor
+    
+    Text {
+        text: displayName
+        color: highlightColor
+    }
+}
+```
+
+```qml
+// Caller — using a Loader
+Loader {
+    source: "ProfileCard.qml"
+    onLoaded: {
+        item.userId = currentUser.id
+        item.displayName = currentUser.name
+        item.highlightColor: "#6c3aec"
+    }
+}
+
+// Or using setSource() to supply them at load time:
+profileLoader.setSource("ProfileCard.qml", {
+    userId: currentUser.id,
+    displayName: currentUser.name,
+    highlightColor: "#6c3aec"
+})
+```
+
+If a `required property` is not supplied, the engine emits a compile-time or runtime error — making the missing dependency explicit rather than silently using a default value.
+
+Use `required` when:
+
+- A component **cannot function** without certain data from its caller.
+- You want to **enforce a contract**: the caller must think about what to pass in.
+- You are building a **reusable component** that will be used in multiple contexts.
+
+#### Common Pattern: `required readonly`
+
+In components meant to display read-only data, combine both modifiers:
+
+```qml
+// ContactCard.qml
+Item {
+    required property var contact  // must be supplied
+    readonly property string displayName: contact.firstName + " " + contact.lastName
+    readonly property url avatarUrl: "file:///avatars/" + contact.id + ".png"
+}
+```
+
+The caller supplies `contact`; the component derives read-only display properties from it.
+
+#### When to Use Each
+
+| Situation | Choose |
+| --- | --- |
+| Component is a generic utility (button, label, input field) | No modifiers — normal mutable properties |
+| Component displays data that should not be changed from outside | `readonly` for the computed properties |
+| Component needs mandatory input to work (profile card, detail view) | `required` for those inputs |
+| Data should be supplied once and not changed | `required` + `readonly` |
+| Property is optional with a sensible default | Normal `property` with a default value |
+| Internal state you track but want to expose read-only | `readonly` binding to internal state |
 
 ### The Binding Engine
 
