@@ -30,6 +30,8 @@ expand = true
 heading-split-level = 3
 
 [output.pdf]
+args = ["--epub-cover-image=bookcover.png"]
 
 [output.epub]
 output-file = "qt-quick-qml-python-cpp.epub"
+cover-image = "bookcover.png"
