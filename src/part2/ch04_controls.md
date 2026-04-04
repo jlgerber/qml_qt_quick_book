@@ -1,5 +1,391 @@
 # Chapter 4: Qt Quick Controls 2: Internals and Customization
 
+## Core Controls Overview
+
+Qt Quick Controls provides a comprehensive library of interactive and presentational components for building modern UIs. All controls inherit from `Control` (which inherits from `Item`) and share the architecture described below. This section surveys the main control categories; Chapter 5 covers layouts and responsive design patterns.
+
+### Buttons
+
+Buttons and button-like controls respond to user interaction and trigger actions:
+
+| Control | Purpose |
+| --- | --- |
+| `Button` | Standard push button; emits `clicked` signal |
+| `CheckBox` | Two-state toggle with visual indicator |
+| `RadioButton` | Mutually exclusive option within a group |
+| `Switch` | Toggle switch for on/off states |
+| `DelayButton` | Button that requires a long press to confirm |
+
+```qml
+// buttons.qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ApplicationWindow {
+    visible: true
+    width: 300
+    height: 200
+    title: "Button Controls"
+
+    ColumnLayout {
+        anchors.centerIn: parent
+        spacing: 12
+
+        Button {
+            text: "Submit"
+            onClicked: resultText.text = "Form submitted!"
+        }
+
+        CheckBox {
+            text: "Remember me"
+            checked: true
+        }
+
+        RowLayout {
+            RadioButton {
+                text: "Option A"
+                checked: true
+            }
+            RadioButton {
+                text: "Option B"
+            }
+        }
+
+        Text {
+            id: resultText
+            text: "Click Submit"
+        }
+    }
+}
+```
+
+### Inputs
+
+Input controls allow users to enter or adjust values:
+
+| Control | Purpose |
+| --- | --- |
+| `TextField` | Single-line text input with optional placeholder |
+| `TextArea` | Multi-line text input with scrolling |
+| `ComboBox` | Drop-down selection from a list |
+| `Slider` | Continuous value selection along a track |
+| `SpinBox` | Discrete integer input with increment/decrement buttons |
+| `Dial` | Circular slider for angular values |
+
+```qml
+// inputs.qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ApplicationWindow {
+    visible: true
+    width: 320
+    height: 300
+    title: "Input Controls"
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 16
+        spacing: 12
+
+        TextField {
+            id: nameField
+            placeholderText: "Enter your name"
+            Layout.fillWidth: true
+        }
+
+        Text {
+            text: "Volume: " + Math.round(volumeSlider.value) + "%"
+        }
+
+        Slider {
+            id: volumeSlider
+            from: 0
+            to: 100
+            stepSize: 5
+            value: 50
+            Layout.fillWidth: true
+        }
+
+        Text {
+            text: "Size: " + sizeCombo.currentText
+        }
+
+        ComboBox {
+            id: sizeCombo
+            model: ["Small", "Medium", "Large"]
+            Layout.fillWidth: true
+        }
+
+        Text {
+            text: nameField.text ? ("Hello, " + nameField.text + "!") : "Enter your name above"
+            color: "#666"
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+        }
+    }
+}
+```
+
+### Containers and Navigation
+
+Containers hold other elements; navigation controls organize content across multiple screens:
+
+| Control | Purpose |
+| --- | --- |
+| `ApplicationWindow` | Top-level window with menu bar, toolbars, header, footer |
+| `StackView` | Stack-based navigation (push/pop screens) |
+| `SwipeView` | Swipe-able pages; typically used with `PageIndicator` |
+| `Drawer` | Slide-out side panel for menus or secondary content |
+| `TabBar` | Tabbed navigation; typically paired with `StackLayout` |
+
+```qml
+// containers.qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ApplicationWindow {
+    visible: true
+    width: 400
+    height: 500
+    title: "Navigation Example"
+
+    ColumnLayout {
+        anchors.fill: parent
+        spacing: 0
+
+        TabBar {
+            id: tabBar
+            Layout.fillWidth: true
+
+            TabButton {
+                text: "Home"
+            }
+            TabButton {
+                text: "Settings"
+            }
+            TabButton {
+                text: "About"
+            }
+        }
+
+        StackLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            currentIndex: tabBar.currentIndex
+
+            // Home tab
+            Rectangle {
+                color: "#f0f0f0"
+                Text {
+                    anchors.centerIn: parent
+                    text: "Welcome to Home"
+                    font.pixelSize: 18
+                }
+            }
+
+            // Settings tab
+            Rectangle {
+                color: "#e8f4f8"
+                Text {
+                    anchors.centerIn: parent
+                    text: "Settings go here"
+                    font.pixelSize: 18
+                }
+            }
+
+            // About tab
+            Rectangle {
+                color: "#f4e8e8"
+                Text {
+                    anchors.centerIn: parent
+                    text: "About this app"
+                    font.pixelSize: 18
+                }
+            }
+        }
+    }
+}
+```
+
+### Indicators
+
+Indicators display progress, activity, or discrete states without direct user interaction:
+
+| Control | Purpose |
+| --- | --- |
+| `ProgressBar` | Linear progress visualization; typically used during long operations |
+| `BusyIndicator` | Rotating animation indicating an ongoing operation |
+| `PageIndicator` | Dots showing which page/section is currently active |
+
+```qml
+// indicators.qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ApplicationWindow {
+    visible: true
+    width: 320
+    height: 280
+    title: "Indicators Example"
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 16
+        spacing: 20
+
+        Text {
+            text: "Progress Bar"
+            font.bold: true
+        }
+
+        ProgressBar {
+            Layout.fillWidth: true
+            from: 0
+            to: 100
+            value: progressTimer.elapsed % 101
+        }
+
+        Text {
+            text: "Busy Indicator"
+            font.bold: true
+        }
+
+        BusyIndicator {
+            running: true
+            width: 50
+            height: 50
+        }
+
+        Text {
+            text: "Page Indicator"
+            font.bold: true
+        }
+
+        PageIndicator {
+            count: 5
+            currentIndex: Math.floor(progressTimer.elapsed / 500) % 5
+        }
+    }
+
+    Timer {
+        id: progressTimer
+        running: true
+        repeat: true
+        interval: 50
+        property int elapsed: 0
+        onTriggered: elapsed += interval
+    }
+}
+```
+
+### Menus and Popups
+
+Menus and popups provide contextual options and modal dialogs:
+
+| Control | Purpose |
+| --- | --- |
+| `Menu` | Vertical menu with actions (used standalone or in `MenuBar`) |
+| `MenuBar` | Horizontal menu bar; typically in `ApplicationWindow.menuBar` |
+| `ToolTip` | Small label appearing on hover or focus |
+| `Dialog` | Modal dialog box with user prompt and action buttons |
+
+```qml
+// menus.qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+ApplicationWindow {
+    visible: true
+    width: 350
+    height: 300
+    title: "Menus and Popups"
+
+    ColumnLayout {
+        anchors.fill: parent
+        anchors.margins: 16
+        spacing: 16
+
+        Button {
+            id: menuButton
+            text: "Open Menu"
+
+            onClicked: contextMenu.popup()
+        }
+
+        Menu {
+            id: contextMenu
+
+            MenuItem {
+                text: "New"
+                onTriggered: statusText.text = "New selected"
+            }
+            MenuItem {
+                text: "Open"
+                onTriggered: statusText.text = "Open selected"
+            }
+            MenuSeparator { }
+            MenuItem {
+                text: "Exit"
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Button {
+            id: dialogButton
+            text: "Show Dialog"
+
+            onClicked: confirmDialog.open()
+        }
+
+        Dialog {
+            id: confirmDialog
+            title: "Confirm Action"
+            standardButtons: Dialog.Ok | Dialog.Cancel
+            width: 250
+
+            Text {
+                text: "Are you sure?"
+            }
+
+            onAccepted: statusText.text = "Confirmed!"
+            onRejected: statusText.text = "Cancelled"
+        }
+
+        Rectangle {
+            color: "#f0f0f0"
+            Layout.fillWidth: true
+            Layout.preferredHeight: 60
+            radius: 4
+
+            Text {
+                id: statusText
+                anchors.centerIn: parent
+                text: "Select a menu item or open dialog"
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                hoverEnabled: true
+
+                ToolTip {
+                    visible: parent.containsMouse
+                    text: "Hover for tooltip"
+                    delay: 500
+                }
+            }
+        }
+    }
+}
+```
+
+---
+
 ## Control Architecture: `background`, `contentItem`, `overlay`, and Delegates
 
 Qt Quick Controls 2 (the `QtQuick.Controls` module) is not a thin wrapper around platform widgets. It is a fully custom, GPU-rendered control library that achieves platform-appropriate appearance through interchangeable *styles*, not through native widget APIs. This architecture gives complete rendering control at the cost of requiring explicit style implementations.
@@ -8,7 +394,7 @@ Qt Quick Controls 2 (the `QtQuick.Controls` module) is not a thin wrapper around
 
 Every control in the library derives from `Control`, which defines a three-layer compositing model:
 
-```
+```text
 ┌─────────────────────────┐
 │         overlay          │  z-order above everything
 │  ┌───────────────────┐  │
@@ -95,7 +481,7 @@ Qt Widgets relies on `QStyle` — a C++ virtual interface with platform-specific
 Qt ships several built-in styles:
 
 | Style | Character |
-|---|---|
+| --- | --- |
 | `Basic` | Minimal, no platform pretense, suitable as a base for custom styles |
 | `Fusion` | Cross-platform desktop look, closer to Qt Widgets' Fusion |
 | `Material` | Google Material Design 2 |
