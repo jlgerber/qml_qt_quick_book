@@ -14,7 +14,7 @@ ApplicationWindow {
         anchors.margins: 16
         spacing: 20
 
-        Text {
+        Label {
             text: "Progress Bar"
             font.bold: true
         }
@@ -26,7 +26,7 @@ ApplicationWindow {
             value: progressTimer.elapsed % 101
         }
 
-        Text {
+        Label {
             text: "Busy Indicator"
             font.bold: true
         }
@@ -37,7 +37,7 @@ ApplicationWindow {
             height: 50
         }
 
-        Text {
+        Label {
             text: "Page Indicator"
             font.bold: true
         }

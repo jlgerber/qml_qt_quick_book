@@ -4,6 +4,102 @@
 
 Qt Quick Controls provides a comprehensive library of interactive and presentational components for building modern UIs. All controls inherit from `Control` (which inherits from `Item`) and share the architecture described below. This section surveys the main control categories; Chapter 5 covers layouts and responsive design patterns.
 
+### Label: The Text Control
+
+`Label` is the foundational text control—the Controls-aware equivalent of the `Text` primitive. While `Text` (from `QtQuick`) renders text with no styling awareness, `Label` is designed to integrate seamlessly with the Controls framework, palette system, and themed applications.
+
+#### Text vs. Label: Why This Matters
+
+This distinction is critical for building styled applications:
+
+| Aspect | `Text` (primitive) | `Label` (control) |
+| --- | --- | --- |
+| **Default color** | Black (hardcoded) | Respects `palette.text` |
+| **Font inheritance** | Manual assignment only | Inherits from `ApplicationWindow` |
+| **Theme adaptation** | None — ignores palette | Automatically adapts to palette changes |
+| **Dark mode support** | Requires explicit color | Works automatically |
+| **Best used for** | Custom graphics, overlays | All UI text in styled apps |
+
+#### When to Use Each
+
+```qml
+// ❌ Wrong: Text stays black in dark mode
+Text {
+    text: "Status: Ready"
+}
+
+// ✓ Correct: Label adapts to theme automatically
+Label {
+    text: "Status: Ready"
+}
+
+// ✓ OK: Text with explicit color for special cases
+Text {
+    text: "© 2024"
+    color: "#ffffff"  // Explicit color for overlay/special purpose
+}
+```
+
+#### Example: Light and Dark Themes
+
+```qml
+ApplicationWindow {
+    id: app
+    
+    // Set palette once at the window level
+    palette.text: isDarkMode ? "#ffffff" : "#000000"
+    palette.buttonText: isDarkMode ? "#ffffff" : "#000000"
+    
+    ColumnLayout {
+        // All Labels inherit palette colors automatically
+        Label { text: "This is white in dark mode, black in light mode" }
+        Label { text: "No explicit color needed" }
+        
+        // Text requires explicit color assignment
+        Text { 
+            text: "This would be black in both themes"  // ❌
+        }
+        Text {
+            text: "This adapts (with extra work)"
+            color: app.palette.text  // ✓ but verbose
+        }
+    }
+}
+```
+
+#### Label Properties
+
+Like other Controls, `Label` inherits from `Control` and respects the palette system:
+
+| Property | Purpose |
+| --- | --- |
+| `text` | The label text (same as `Text.text`) |
+| `font` | Font properties (inherits from window) |
+| `color` | Text color (automatically set from palette) |
+| `horizontalAlignment`, `verticalAlignment` | Text alignment |
+| `wrapMode` | Text wrapping behavior |
+| `elide` | Text truncation style |
+
+```qml
+Label {
+    text: "Application Status"
+    font.bold: true
+    font.pixelSize: 14
+    elide: Text.ElideRight
+    wrapMode: Text.WordWrap
+}
+```
+
+#### Best Practice
+
+**In any Controls-based application, use `Label` for all UI text.** Reserve `Text` for:
+
+- Low-level custom graphics or overlays
+- Cases where you explicitly don't want styling integration
+- Prototypes where styling isn't relevant
+
+This single rule eliminates dark-mode and theme-switching bugs before they happen.
+
 ### Buttons
 
 Buttons and button-like controls respond to user interaction and trigger actions:
@@ -30,10 +126,13 @@ ApplicationWindow {
 
     ColumnLayout {
         anchors.centerIn: parent
+        anchors.margins: 16
         spacing: 12
+        width: parent.width
 
         Button {
             text: "Submit"
+            Layout.fillWidth: true
             onClicked: resultText.text = "Form submitted!"
         }
 
@@ -42,19 +141,41 @@ ApplicationWindow {
             checked: true
         }
 
+        Switch {
+            text: "Dark mode"
+            checked: false
+        }
+
         RowLayout {
+            Layout.fillWidth: true
+            Text { text: "Options:" }
             RadioButton {
-                text: "Option A"
+                text: "A"
                 checked: true
             }
             RadioButton {
-                text: "Option B"
+                text: "B"
             }
         }
 
-        Text {
-            id: resultText
-            text: "Click Submit"
+        DelayButton {
+            text: "Delete (hold 2s)"
+            Layout.fillWidth: true
+            delay: 2000
+            onActivated: resultText.text = "Deleted!"
+        }
+
+        Rectangle {
+            color: "#f0f0f0"
+            Layout.fillWidth: true
+            Layout.preferredHeight: 40
+            radius: 4
+
+            Text {
+                id: resultText
+                anchors.centerIn: parent
+                text: "Click Submit or Delete"
+            }
         }
     }
 }
@@ -88,7 +209,7 @@ ApplicationWindow {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 16
-        spacing: 12
+        spacing: 10
 
         TextField {
             id: nameField
@@ -98,6 +219,7 @@ ApplicationWindow {
 
         Text {
             text: "Volume: " + Math.round(volumeSlider.value) + "%"
+            font.bold: true
         }
 
         Slider {
@@ -110,7 +232,43 @@ ApplicationWindow {
         }
 
         Text {
+            text: "Comments:"
+        }
+
+        TextArea {
+            placeholderText: "Enter multiple lines of text..."
+            Layout.fillWidth: true
+            Layout.preferredHeight: 60
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 16
+
+            ColumnLayout {
+                Text { text: "Quantity:"; font.bold: true }
+                SpinBox {
+                    from: 1
+                    to: 100
+                    value: 5
+                }
+            }
+
+            ColumnLayout {
+                Text { text: "Rotation:"; font.bold: true }
+                Dial {
+                    from: 0
+                    to: 360
+                    value: 45
+                    implicitWidth: 80
+                    implicitHeight: 80
+                }
+            }
+        }
+
+        Text {
             text: "Size: " + sizeCombo.currentText
+            font.bold: true
         }
 
         ComboBox {
@@ -119,11 +277,17 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
-        Text {
-            text: nameField.text ? ("Hello, " + nameField.text + "!") : "Enter your name above"
-            color: "#666"
+        Rectangle {
+            color: "#f0f0f0"
             Layout.fillWidth: true
-            wrapMode: Text.WordWrap
+            Layout.preferredHeight: 40
+            radius: 4
+
+            Text {
+                anchors.centerIn: parent
+                text: nameField.text ? ("Hello, " + nameField.text + "!") : "Enter your name above"
+                color: "#666"
+            }
         }
     }
 }
@@ -149,27 +313,80 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     visible: true
-    width: 400
+    width: 500
     height: 500
     title: "Navigation Example"
+
+    Drawer {
+        id: drawer
+        width: 200
+        height: parent.height
+        edge: Qt.LeftEdge
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 12
+            spacing: 8
+
+            Text {
+                text: "Menu"
+                font.bold: true
+                font.pixelSize: 16
+            }
+
+            ItemDelegate {
+                text: "Home"
+                Layout.fillWidth: true
+                onClicked: { tabBar.currentIndex = 0; drawer.close() }
+            }
+
+            ItemDelegate {
+                text: "Settings"
+                Layout.fillWidth: true
+                onClicked: { tabBar.currentIndex = 1; drawer.close() }
+            }
+
+            ItemDelegate {
+                text: "About"
+                Layout.fillWidth: true
+                onClicked: { tabBar.currentIndex = 2; drawer.close() }
+            }
+
+            Item { Layout.fillHeight: true }
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
 
+        ToolBar {
+            Layout.fillWidth: true
+
+            RowLayout {
+                anchors.fill: parent
+
+                Button {
+                    text: "☰"
+                    flat: true
+                    onClicked: drawer.open()
+                }
+
+                Text {
+                    text: "App"
+                    font.bold: true
+                    Layout.fillWidth: true
+                }
+            }
+        }
+
         TabBar {
             id: tabBar
             Layout.fillWidth: true
 
-            TabButton {
-                text: "Home"
-            }
-            TabButton {
-                text: "Settings"
-            }
-            TabButton {
-                text: "About"
-            }
+            TabButton { text: "Tabs" }
+            TabButton { text: "Swipe" }
+            TabButton { text: "Stack" }
         }
 
         StackLayout {
@@ -177,33 +394,86 @@ ApplicationWindow {
             Layout.fillHeight: true
             currentIndex: tabBar.currentIndex
 
-            // Home tab
+            // Tabs view
             Rectangle {
                 color: "#f0f0f0"
                 Text {
                     anchors.centerIn: parent
-                    text: "Welcome to Home"
-                    font.pixelSize: 18
+                    text: "Tab-based Navigation"
+                    font.pixelSize: 16
                 }
             }
 
-            // Settings tab
-            Rectangle {
-                color: "#e8f4f8"
-                Text {
-                    anchors.centerIn: parent
-                    text: "Settings go here"
-                    font.pixelSize: 18
+            // SwipeView
+            SwipeView {
+                currentIndex: 0
+                orientation: Qt.Horizontal
+
+                Rectangle {
+                    color: "#e8f4f8"
+                    Text { anchors.centerIn: parent; text: "Swipe Page 1" }
+                }
+
+                Rectangle {
+                    color: "#e8e8f8"
+                    Text { anchors.centerIn: parent; text: "Swipe Page 2" }
+                }
+
+                Rectangle {
+                    color: "#f8e8e8"
+                    Text { anchors.centerIn: parent; text: "Swipe Page 3" }
                 }
             }
 
-            // About tab
-            Rectangle {
-                color: "#f4e8e8"
-                Text {
-                    anchors.centerIn: parent
-                    text: "About this app"
-                    font.pixelSize: 18
+            // StackView
+            StackView {
+                initialItem: stackHomePage
+
+                Component {
+                    id: stackHomePage
+                    Rectangle {
+                        color: "#f4e8e8"
+                        ColumnLayout {
+                            anchors.centerIn: parent
+                            spacing: 12
+
+                            Text {
+                                text: "Stack-based Navigation"
+                                font.pixelSize: 16
+                            }
+
+                            Button {
+                                text: "Go to Details"
+                                onClicked: stack.push(stackDetailsPage)
+                            }
+                        }
+                    }
+                }
+
+                Component {
+                    id: stackDetailsPage
+                    Rectangle {
+                        color: "#e8f4e8"
+                        ColumnLayout {
+                            anchors.centerIn: parent
+                            spacing: 12
+
+                            Text {
+                                text: "Details Page"
+                                font.pixelSize: 16
+                            }
+
+                            Button {
+                                text: "Go Back"
+                                onClicked: stack.pop()
+                            }
+                        }
+                    }
+                }
+
+                StackView {
+                    id: stack
+                    anchors.fill: parent
                 }
             }
         }
@@ -302,9 +572,40 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     visible: true
-    width: 350
-    height: 300
+    width: 400
+    height: 400
     title: "Menus and Popups"
+
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            MenuItem {
+                text: "New"
+                onTriggered: statusText.text = "File > New"
+            }
+            MenuItem {
+                text: "Open"
+                onTriggered: statusText.text = "File > Open"
+            }
+            MenuSeparator { }
+            MenuItem {
+                text: "Exit"
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: "Edit"
+            MenuItem {
+                text: "Undo"
+                onTriggered: statusText.text = "Edit > Undo"
+            }
+            MenuItem {
+                text: "Redo"
+                onTriggered: statusText.text = "Edit > Redo"
+            }
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -383,8 +684,6 @@ ApplicationWindow {
     }
 }
 ```
-
----
 
 ## Control Architecture: `background`, `contentItem`, `overlay`, and Delegates
 
@@ -518,7 +817,7 @@ A custom style is a directory of QML files, one per control type, following a sp
 
 ### Directory Layout
 
-```
+```text
 MyStyle/
 ├── MyStyle.conf          (optional: configure fallback style)
 ├── Button.qml
@@ -530,7 +829,7 @@ MyStyle/
 
 The `qmldir` registers the style's QML module:
 
-```
+```text
 module MyStyle
 Button 2.15 Button.qml
 TextField 2.15 TextField.qml

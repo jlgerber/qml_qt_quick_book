@@ -5,9 +5,40 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     visible: true
-    width: 350
-    height: 300
+    width: 400
+    height: 400
     title: "Menus and Popups"
+
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            MenuItem {
+                text: "New"
+                onTriggered: statusText.text = "File > New"
+            }
+            MenuItem {
+                text: "Open"
+                onTriggered: statusText.text = "File > Open"
+            }
+            MenuSeparator { }
+            MenuItem {
+                text: "Exit"
+                onTriggered: Qt.quit()
+            }
+        }
+
+        Menu {
+            title: "Edit"
+            MenuItem {
+                text: "Undo"
+                onTriggered: statusText.text = "Edit > Undo"
+            }
+            MenuItem {
+                text: "Redo"
+                onTriggered: statusText.text = "Edit > Redo"
+            }
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -16,7 +47,7 @@ ApplicationWindow {
 
         Button {
             id: menuButton
-            text: "Open Menu"
+            text: "Open Context Menu"
 
             onClicked: contextMenu.popup()
         }
@@ -34,8 +65,8 @@ ApplicationWindow {
             }
             MenuSeparator { }
             MenuItem {
-                text: "Exit"
-                onTriggered: Qt.quit()
+                text: "Delete"
+                onTriggered: statusText.text = "Delete selected"
             }
         }
 
@@ -66,10 +97,10 @@ ApplicationWindow {
             Layout.preferredHeight: 60
             radius: 4
 
-            Text {
+            Label {
                 id: statusText
                 anchors.centerIn: parent
-                text: "Select a menu item or open dialog"
+                text: "Try the MenuBar, context menu, or dialog"
             }
 
             MouseArea {

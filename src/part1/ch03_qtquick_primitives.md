@@ -91,6 +91,364 @@ Anchors and `Layout` attached properties also conflict. Items inside a `RowLayou
 
 ---
 
+## Visual Primitives: Text, Rectangle, Image, Shape, and Canvas
+
+Beyond `Item`, Qt Quick provides a set of built-in visual elements for rendering content. These are the foundational building blocks of every UI — text, shapes, images, and vector graphics. This section covers their properties, patterns, and when to use each.
+
+### `Text`: Rendering Text Content
+
+`Text` renders a string of text using the system font engine. It is a low-level primitive with no styling framework integration (contrast with `Label` in Controls, discussed below).
+
+#### Text Properties
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `text` | `string` | The text content to display |
+| `font.family` | `string` | Font name (e.g., "Arial", "Courier") |
+| `font.pixelSize` | `int` | Font size in logical pixels |
+| `font.bold`, `font.italic` | `bool` | Text style |
+| `color` | `color` | Text color (default: black) |
+| `horizontalAlignment` | `enum` | `Text.AlignLeft`, `Text.AlignHCenter`, `Text.AlignRight` |
+| `verticalAlignment` | `enum` | `Text.AlignTop`, `Text.AlignVCenter`, `Text.AlignBottom` |
+| `wrapMode` | `enum` | `Text.NoWrap`, `Text.WordWrap`, `Text.WrapAnywhere` |
+| `elide` | `enum` | `Text.ElideNone`, `Text.ElideLeft`, `Text.ElideMiddle`, `Text.ElideRight` |
+| `textFormat` | `enum` | `Text.PlainText` or `Text.RichText` |
+
+#### Text Color in Styled Applications
+
+**Important**: Plain `Text` elements always render in their default color (black). If you're using Qt Quick Controls with styling or dark themes, use `Label` instead — it automatically adapts to the application's palette. See Chapter 4 for details on `Label` and the styled Controls framework.
+
+#### Measuring Text
+
+The `contentWidth` and `contentHeight` properties report the bounding box of the rendered text (useful for sizing containers to fit text):
+
+```qml
+Text {
+    id: label
+    text: "Hello"
+    font.pixelSize: 16
+}
+
+Rectangle {
+    width: label.contentWidth + 16
+    height: label.contentHeight + 8
+    color: "lightgray"
+
+    Text { anchors.centerIn: parent; text: label.text }
+}
+```
+
+#### Rich Text
+
+`Text.RichText` supports basic HTML-like markup (bold, italic, links, colors):
+
+```qml
+Text {
+    textFormat: Text.RichText
+    text: "Visit <a href='https://qt.io'>Qt.io</a> for more."
+    onLinkActivated: Qt.openUrlExternally(link)
+}
+```
+
+### `Rectangle`: Filled and Bordered Boxes
+
+`Rectangle` is the workhorse primitive for creating solid color regions, borders, and backgrounds. It inherits from `Item` and adds fill and border styling.
+
+#### Rectangle Properties
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `color` | `color` | Fill color |
+| `radius` | `real` | Corner radius (0 = sharp corners) |
+| `border.color` | `color` | Border color |
+| `border.width` | `int` | Border thickness in pixels |
+| `gradient` | `Gradient` | Color gradient (overrides `color` if set) |
+
+#### Rectangle Styling
+
+```qml
+Rectangle {
+    width: 200
+    height: 100
+    color: "#3daee9"
+    radius: 8
+    border.color: "#1a6e9a"
+    border.width: 2
+}
+```
+
+#### Gradients
+
+`Rectangle` supports linear and radial gradients:
+
+```qml
+Rectangle {
+    width: 200
+    height: 100
+
+    gradient: Gradient {
+        GradientStop { position: 0.0; color: "#ff6b6b" }
+        GradientStop { position: 0.5; color: "#ffd93d" }
+        GradientStop { position: 1.0; color: "#6bcf7f" }
+    }
+}
+```
+
+#### Shadows and Effects
+
+Combine with `layer.effect` to add drop shadows (requires `Qt.graphicalEffects` or `QtQuick.Effects`):
+
+```qml
+Rectangle {
+    width: 100
+    height: 100
+    color: "white"
+    radius: 4
+
+    layer.enabled: true
+    layer.effect: DropShadow {
+        horizontalOffset: 4
+        verticalOffset: 4
+        radius: 8
+        samples: 16
+        color: "#80000000"
+    }
+}
+```
+
+### `Image`: Loading and Displaying Images
+
+`Image` loads and displays raster (PNG, JPEG) and vector (SVG) images from files or URLs. It handles scaling, aspect ratio preservation, and asynchronous loading.
+
+#### Image Properties
+
+| Property | Type | Purpose |
+| --- | --- | --- |
+| `source` | `url` | File or URL path to the image |
+| `width`, `height` | `real` | Display size (overrides source size if set) |
+| `sourceSize` | `size` | Preferred source size for decoding (optimizes memory) |
+| `fillMode` | `enum` | How to fit the source into the display area |
+| `asynchronous` | `bool` | Load image on background thread (doesn't block UI) |
+| `cache` | `bool` | Cache the decoded image in memory (default: true) |
+| `status` | `enum` | `Image.Null`, `Image.Loading`, `Image.Ready`, `Image.Error` |
+
+#### Fill Modes
+
+| Mode | Behavior |
+| --- | --- |
+| `Image.Stretch` | Stretch to fill; may distort aspect ratio |
+| `Image.PreserveAspectFit` | Scale to fit within bounds; maintain aspect ratio |
+| `Image.PreserveAspectCrop` | Scale to cover bounds; maintain aspect ratio (may crop) |
+| `Image.Tile` | Repeat the image to fill the area |
+| `Image.TileVertically` / `Image.TileHorizontally` | Repeat in one direction |
+| `Image.Pad` | Display at sourceSize; don't scale (may not fill) |
+
+#### Loading Images
+
+```qml
+Image {
+    source: "images/icon.png"
+    width: 64
+    height: 64
+    fillMode: Image.PreserveAspectFit
+    asynchronous: true
+}
+```
+
+#### Optimizing with `sourceSize`
+
+For performance, set `sourceSize` to the actual display size. This tells the image decoder to decode only the needed resolution, reducing memory and load time:
+
+```qml
+Image {
+    source: "images/photo.jpg"
+    width: 200
+    height: 200
+    sourceSize: Qt.size(200, 200)  // Decode at 200x200, not full resolution
+    fillMode: Image.PreserveAspectCrop
+}
+```
+
+#### Loading from URLs
+
+Images can be loaded from network URLs with automatic caching:
+
+```qml
+Image {
+    source: "https://example.com/images/avatar.png"
+    width: 80
+    height: 80
+    fillMode: Image.PreserveAspectCrop
+
+    Rectangle {
+        anchors.fill: parent
+        visible: parent.status === Image.Loading
+        color: "#f0f0f0"
+
+        Text {
+            anchors.centerIn: parent
+            text: "Loading..."
+        }
+    }
+}
+```
+
+### `Shape`: Vector Graphics and Paths
+
+`Shape` renders vector graphics using paths — an alternative to raster images for scalable, resolution-independent graphics. It is part of `QtQuick.Shapes` and is useful for custom icons, diagrams, and illustrations.
+
+#### Drawing with Shape
+
+```qml
+import QtQuick.Shapes
+
+Shape {
+    width: 100
+    height: 100
+    anchors.centerIn: parent
+
+    ShapePath {
+        fillColor: "#3daee9"
+        strokeColor: "#1a6e9a"
+        strokeWidth: 2
+
+        PathLine { x: 100; y: 0 }
+        PathLine { x: 100; y: 100 }
+        PathLine { x: 0; y: 100 }
+        PathLine { x: 0; y: 0 }
+        PathLine { x: 100; y: 100 }
+    }
+}
+```
+
+#### Path Elements
+
+`Shape` supports various path commands:
+
+| Element | Purpose |
+| --- | --- |
+| `PathLine` | Straight line to a point |
+| `PathCurve` | Cubic Bezier curve |
+| `PathQuad` | Quadratic Bezier curve |
+| `PathArc` | Circular arc |
+| `PathSvg` | SVG path syntax (advanced) |
+
+#### Advantages Over Images
+
+- **Scalable**: Renders at any size without pixelation
+- **Small**: Text-based paths are tiny compared to raster images
+- **Editable**: Paths can be modified programmatically
+- **Resolution-independent**: Perfect for icons and logos
+
+```qml
+Shape {
+    width: 50
+    height: 50
+
+    ShapePath {
+        fillColor: "transparent"
+        strokeColor: "#666"
+        strokeWidth: 2
+
+        // Draw a circle
+        PathArc {
+            x: 50; y: 25
+            radiusX: 25; radiusY: 25
+            useLargeArc: false
+            sweepFlagPositive: true
+        }
+    }
+}
+```
+
+### `Canvas`: Low-Level Drawing
+
+`Canvas` is a low-level drawing surface for procedural graphics. It provides a 2D graphics context similar to HTML Canvas, allowing pixel-level control via JavaScript. Use it for custom animations, plots, games, or any dynamic graphics that don't fit higher-level primitives.
+
+#### Canvas Drawing
+
+```qml
+import QtQuick
+
+Canvas {
+    id: canvas
+    width: 400
+    height: 300
+    anchors.centerIn: parent
+
+    onPaint: {
+        let ctx = getContext("2d")
+        ctx.fillStyle = "#3daee9"
+        ctx.fillRect(20, 20, 100, 50)
+
+        ctx.strokeStyle = "#1a6e9a"
+        ctx.lineWidth = 2
+        ctx.strokeRect(140, 20, 100, 50)
+
+        ctx.fillStyle = "#6bcf7f"
+        ctx.beginPath()
+        ctx.arc(250, 45, 25, 0, Math.PI * 2)
+        ctx.fill()
+    }
+}
+```
+
+#### Context Methods
+
+`Canvas` exposes a 2D context (via `getContext("2d")`) with methods similar to HTML Canvas:
+
+| Method | Purpose |
+| --- | --- |
+| `fillRect(x, y, w, h)` | Fill a rectangle |
+| `strokeRect(x, y, w, h)` | Stroke a rectangle outline |
+| `fillText(text, x, y)` | Draw filled text |
+| `beginPath()` / `closePath()` | Start/end a path |
+| `moveTo(x, y)` | Move the drawing cursor |
+| `lineTo(x, y)` | Draw a line to a point |
+| `arc(x, y, r, start, end)` | Draw a circular arc |
+| `drawImage(image, x, y)` | Draw an image onto the canvas |
+
+#### Redrawing
+
+By default, `Canvas` redraws when `onPaint` is called. To redraw after a state change, call `requestPaint()`:
+
+```qml
+Canvas {
+    id: canvas
+    width: 200
+    height: 200
+
+    property int count: 0
+
+    onPaint: {
+        let ctx = getContext("2d")
+        ctx.clearRect(0, 0, width, height)
+        ctx.fillStyle = "#3daee9"
+        ctx.font = "16px Arial"
+        ctx.fillText("Count: " + count, 20, 50)
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            canvas.count++
+            canvas.requestPaint()
+        }
+    }
+}
+```
+
+#### Performance Considerations
+
+- **Rendering cost**: Canvas redraws the entire surface every frame by default
+- **Large surfaces**: Can be expensive; use sparingly for animations
+- **Offline rendering**: Cache expensive drawings as images when possible
+- **Threading**: Canvas drawing happens on the main thread; heavy computation may block UI
+
+For static graphics, prefer `Rectangle`, `Image`, or `Shape`. Use `Canvas` for dynamic, procedural, or frequently-changing graphics (charts, animations, games).
+
+---
+
 ## Transforms, Opacity, and the Layer System
 
 ### Transforms
